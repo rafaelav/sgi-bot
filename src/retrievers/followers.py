@@ -3,11 +3,12 @@ All the methods that deal with followers
 * getting any kind of information on followers of a user
 """
 from connection import twitterapi
-# 
+
+# The maximum number of ids that can be retriev in one call from twitter api 
 MAX_ALLOWED = 5000
 
 # get a user's given number of followers ids (only ids) - if a limit is not given
-# than it means that all the followers' ids are needed
+# than it means that all the followers' ids are needed (limit of calls = 15)
 def get_followers_data(twitter_api, cursor, limit, screen_name=None, user_id=None):    
     # Must have either screen_name or user_id (logical xor)
     assert (screen_name != None) != (user_id != None), \
