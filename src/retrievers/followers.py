@@ -9,7 +9,7 @@ MAX_ALLOWED = 5000
 
 # get a user's given number of followers ids (only ids) - if a limit is not given
 # than it means that all the followers' ids are needed (limit of calls = 15)
-def get_followers_data(twitter_api, cursor, limit, screen_name=None, user_id=None):    
+def get_followers_ids(twitter_api, cursor, limit, screen_name=None, user_id=None):    
     # Must have either screen_name or user_id (logical xor)
     assert (screen_name != None) != (user_id != None), \
     "Must have screen_name or user_id, but not both"

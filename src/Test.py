@@ -7,7 +7,7 @@ twitter_api = twitterapi.oauth_login()
 username = "jennifer_s_life"
 
 # get all followers' ids
-foll = followers.get_followers_data(twitter_api, -1, 1, screen_name=username)
+foll = followers.get_followers_ids(twitter_api, -1, 1, screen_name=username)
 
 print foll
 
