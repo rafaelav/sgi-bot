@@ -69,8 +69,8 @@ def test_actions_users():
 ######################################### TEST main
 def test_actions_main():
     #print "TEST actions: get and save today's followers list"
-    #main.save_get_today_followers_list(username)
-    followers_data = load.load_list_from_file("Followers/rafaela0621_followers_9.11.2013")
+    main.save_get_today_followers_list("jennifer_s_life", "ids")
+    """followers_data = load.load_list_from_file("Followers/rafaela0621_followers_9.11.2013")
     
     print "pick_random_users_from_list (for 10 - run it more times and see it's random):"
     picked_users = main.pick_random_users_from_list(followers_data, 2)
@@ -83,7 +83,7 @@ def test_actions_main():
     for key, val in follow_count_dict.items():
         print key," -> ",val
         
-    main.follow_users_followers(picked_users, follow_count_dict, username)
+    main.follow_users_followers(picked_users, follow_count_dict, username)"""
     
 ######################################### TESTING datastore 
 ######################################### TEST saves
@@ -97,12 +97,12 @@ def test_datastore_load():
     loaded_list = load.load_list_from_file("test_save")
     print loaded_list
     
-"""test_datastore_save()
-test_datastore_load()
-test_actions_followers()
-test_actions_users()
+#test_datastore_save()
+#test_datastore_load()
+#test_actions_followers()
+#test_actions_users()
 test_actions_main()
-test_actions_friends()"""
+#test_actions_friends()
 
 # to save initial core friends of account jennifer_s_life
 """foll = friends.get_info_about_friends (-1, 80, screen_name="jennifer_s_life")

@@ -12,7 +12,7 @@ Actions which are part of the bot's strategy
 '''
 
 from connection import twitterapi
-from actions import followers, users
+from actions import followers, users, friends
 from datastore import save
 from random import randint
 import datetime
@@ -25,20 +25,42 @@ DIR_FOL = "Followers/"
 DIR_FR = "Friends/"
 
 # get and save today's friends list (the list is saved but is also returned)
-#def save_get_today_friends_list(user):
+def save_get_today_friends_list(screen_name, option):
+    """Get and save today's friends list (the list is saved but is also returned)"""
+    
+    list_user = [screen_name]
+    
+    # get info on user so that we can access its friends count
+    user_info = users.get_info_about_users(screen_names=list_user)
+    
+    if option == "data":
+        # get info for all friends of user
+        user_friends = friends.get_info_about_friends(-1, user_info[0]["friends_count"] , screen_name=screen_name)
+    elif option == "ids":
+        # get info for all friends of user
+        user_friends = friends.get_friends_ids(-1, user_info[0]["friends_count"] , screen_name=screen_name)
+    
+    # saving today's list
+    save.save_list_to_file(user_friends, DIR_FR+screen_name+"_"+option+"_"+today_friends_file)
+    
+    return followers
     
 #TESTED
-def save_get_today_followers_list(screen_name):
+def save_get_today_followers_list(screen_name, option):
     """Get and save today's followers list (the list is saved but is also returned)"""
     
     list_user = [screen_name]
     # get info on user so that we can access its followers count
     user_info = users.get_info_about_users(screen_names=list_user)
-    # get info for all followers of user
-    user_followers = followers.get_info_about_followers(-1, user_info[0]["followers_count"] , screen_name=screen_name)
+    
+    if option == "data":
+        # get info for all followers of user
+        user_followers = followers.get_info_about_followers(-1, user_info[0]["followers_count"] , screen_name=screen_name)
+    elif option == "ids":
+        user_followers = followers.get_followers_ids(-1, user_info[0]["followers_count"] , screen_name=screen_name)
     
     # saving today's list
-    save.save_list_to_file(user_followers, DIR_FOL+screen_name+today_followers_file)
+    save.save_list_to_file(user_followers, DIR_FOL+screen_name+"_"+option+"_"+today_followers_file)
     
     return followers
         
