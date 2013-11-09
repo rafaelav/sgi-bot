@@ -1,6 +1,7 @@
 from connection import twitterapi
 from retrievers import followers
 from retrievers import general
+from datastore import load, save
 # authenticati
 twitter_api = twitterapi.oauth_login()
 
@@ -41,3 +42,11 @@ print "IDS from SCRNMS: ",ids
 # getting ids from list with user info
 ids = general.get_users_ids_from_list_users(info)
 print "IDS from user info: ",ids
+
+
+######################################### TESTING datastore
+save.save_list_to_file(["ana","are","mere"], "test_save")
+loaded_list = load.load_list_from_file("test_save")
+print "TEST datastore: save/load list to/from file: ", loaded_list
+
+######################################### TESTING actions
