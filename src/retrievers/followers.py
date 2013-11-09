@@ -11,9 +11,10 @@ MAX_ALLOWED_SCRNMS = 200
 # twitter api connection
 twitter_api = twitterapi.oauth_login()
 
-# get a user's given number of followers ids (only ids) - if a limit is not given
-# than it means that all the followers' ids are needed (limit of calls = 15)
-def get_followers_ids(cursor, limit, screen_name=None, user_id=None):    
+# TESTED
+def get_followers_ids(cursor, limit, screen_name=None, user_id=None):
+    """Get a user's given number of followers ids (only ids). If a limit is not given than it means that all the followers' ids are needed (limit of calls = 15)"""
+    
     # Must have either screen_name or user_id (logical xor)
     assert (screen_name != None) != (user_id != None), \
     "Must have screen_name or user_id, but not both"
@@ -47,8 +48,9 @@ def get_followers_ids(cursor, limit, screen_name=None, user_id=None):
     # returns the needed results
     return result[:limit]
 
-# get followers information (all information on them)
-def get_info_about_followers (cursor, limit, screen_name=None, user_id=None):    
+def get_info_about_followers (cursor, limit, screen_name=None, user_id=None):
+    """Get followers information (all information on them)"""
+        
     # Must have either screen_name or user_id (logical xor)
     assert (screen_name != None) != (user_id != None), \
     "Must have screen_name or user_id, but not both"

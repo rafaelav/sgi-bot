@@ -28,8 +28,9 @@ DIR_FR = "Friends/"
 # get and save today's friends list (the list is saved but is also returned)
 #def save_get_today_friends_list(user):
     
-# get and save today's followers list (the list is saved but is also returned) 
 def save_get_today_followers_list(screen_name):
+    """Get and save today's followers list (the list is saved but is also returned)"""
+    
     list_user = [screen_name]
     # get info on user so that we can access its followers count
     user_info = general.get_info_about_users(list_user)
@@ -40,13 +41,15 @@ def save_get_today_followers_list(screen_name):
     save.save_list_to_file(followers, DIR_FOL+screen_name+today_followers_file)
     
     return followers
-    
-# checks if a user is worth following and returns True/False    
+        
 def is_worth_following(user):
+    """Checks if a user is worth following and returns True/False"""
+    
     return True
-
-# randomly selects users from user list (at most count)                    
-def pick_random_users_from_list(users, screen_name, count):
+                    
+def pick_random_users_from_list(users, count):
+    """Randomly selects users from user list (at most count)"""
+    
     # when asking for more than exist, just return all followers
     if count > len(users):
         return users
@@ -61,9 +64,8 @@ def pick_random_users_from_list(users, screen_name, count):
     
     return picked_users
 
-# returns a dictionari with keys = screen_names and values between 0 and max_count with 
-# tell how many we want to follow associated with that screen_name (either friends of or followers of)
 def gen_random_follow_count(users, max_count=10):
+    """Returns a dictionari with keys = screen_names and values between 0 and max_count with tell how many we want to follow associated with that screen_name (either friends of or followers of)"""
     rand_dict = dict()
     
     for user in users:
@@ -74,9 +76,8 @@ def gen_random_follow_count(users, max_count=10):
     
 # follows a number of users randomly from the pool of friends of a list of people
 
-# follows a number of users randomly from the pool of followers of a list of people
 def follow_users_followers(users, follow_count_each):
-    
+    """Follows a number of users randomly from the pool of followers of a list of people"""
     for user in users:
         # will keep track of how many people have been followed from followers of user
         followed = 0
