@@ -14,7 +14,6 @@ Actions which are part of the bot's strategy
 from connection import twitterapi
 from actions import followers, users
 from datastore import save
-from datastore import load
 from random import randint
 import datetime
 
@@ -112,4 +111,4 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
                 print "[INFO] Added ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
                 followed = followed + 1
             else:
-                 print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]                      
+                print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]                      
