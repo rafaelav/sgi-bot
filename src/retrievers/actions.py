@@ -45,15 +45,42 @@ def save_get_today_followers_list(screen_name):
 def is_worth_following(user):
     return True
 
+# randomly selects users from user list (at most count)                    
+def pick_random_users_from_list(users, screen_name, count):
+    # when asking for more than exist, just return all followers
+    if count > len(users):
+        return users
+    
+    # list with picked followers
+    picked_users = []
+    
+    # generating random 'count' numbers in between 0 and the total number of followers
+    for i in range(0,count):
+        r = randint(0,len(users))
+        picked_users.append(users[r])
+    
+    return picked_users
+
+# returns a dictionari with keys = screen_names and values between 0 and max_count with 
+# tell how many we want to follow associated with that screen_name (either friends of or followers of)
+def gen_random_follow_count(users, max_count=10):
+    rand_dict = dict()
+    
+    for user in users:
+        r = randint(0,max_count)
+        rand_dict[user["screen_name"]] = r
+    
+    return rand_dict
+    
 # follows a number of users randomly from the pool of friends of a list of people
 
 # follows a number of users randomly from the pool of followers of a list of people
-def follow_users_followers(users, follow_count, count=20):
+def follow_users_followers(users, follow_count_each):
     
     for user in users:
         # will keep track of how many people have been followed from followers of user
         followed = 0
-        while followed < follow_count[user["screen_name"]]:
+        while followed < follow_count_each[user["screen_name"]]:
             # getting info about followers starting with recent followers of the usr
             user_followers = followers.get_info_about_followers(-1, user["followers_count"], screen_name=user["screen_name"])
             
@@ -66,23 +93,4 @@ def follow_users_followers(users, follow_count, count=20):
                 if worth_following:
                     twitter_api.friendships.create(screen_name=user["screen_name"])
                     followed = followed + 1
-                    
-# randomly selects from the users that follow the screen_name                    
-def pick_random_users_from_followers_of(screen_name, count):
-    followers = load.load_list_from_file(DIR_FOL+screen_name+today_followers_file)
-    
-    # when asking for more than exist, just return all followers
-    if count > len(followers):
-        return followers
-    
-    # list with picked followers
-    picked_followers = []
-    
-    # generating random 'count' numbers in between 0 and the total number of followers
-    for i in range(0,count):
-        r = randint(0,len(followers))
-        picked_followers.append(followers[r])
-    
-    return picked_followers
-    
-    
+                       
