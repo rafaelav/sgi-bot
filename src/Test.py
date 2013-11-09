@@ -1,5 +1,5 @@
 from connection import twitterapi
-from actions import users, main, followers
+from actions import users, main, followers, friends
 from datastore import load, save
 # authenticati
 twitter_api = twitterapi.oauth_login()
@@ -18,6 +18,19 @@ def test_actions_followers():
     foll = followers.get_info_about_followers (-1, 20, screen_name=username)
     print "get_info_about_followers:"
     print foll
+    
+######################################### TEST friends
+def test_actions_friends():
+    print "TEST actions/friends"
+    foll = friends.get_friends_ids(-1, 5, screen_name=username)
+    print "get_friends_ids:"
+    print foll
+    
+    foll = friends.get_info_about_friends (-1, 20, screen_name=username)
+    print "get_info_about_friends:"
+    print foll
+    for f in foll:
+        print f["screen_name"]
 
 ######################################### TEST users
 def test_actions_users():
@@ -87,5 +100,24 @@ def test_datastore_load():
 """test_datastore_save()
 test_datastore_load()
 test_actions_followers()
-test_actions_users()"""
+test_actions_users()
 test_actions_main()
+test_actions_friends()"""
+
+# to save initial core friends of account jennifer_s_life
+"""foll = friends.get_info_about_friends (-1, 80, screen_name="jennifer_s_life")
+save.save_list_to_file(foll,"core_friends_data")
+print "done data"
+scr_nms = []
+for f in foll:
+    scr_nms.append(f["screen_name"])
+save.save_list_to_file(scr_nms,"core_friends_screen_names")
+print "done scr"
+
+foll = friends.get_friends_ids(-1, 80, screen_name="jennifer_s_life")
+save.save_list_to_file(foll,"core_friends_ids")
+print "done ids"
+
+print len(load.load_list_from_file("core_friends_screen_names"))
+print len(load.load_list_from_file("core_friends_ids"))
+print len(load.load_list_from_file("core_friends_data"))"""
