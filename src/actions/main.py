@@ -12,7 +12,7 @@ Actions which are part of the bot's strategy
 '''
 
 from connection import twitterapi
-from retrievers import followers, general
+from actions import followers, users
 from datastore import save
 from datastore import load
 from random import randint
@@ -33,7 +33,7 @@ def save_get_today_followers_list(screen_name):
     
     list_user = [screen_name]
     # get info on user so that we can access its followers count
-    user_info = general.get_info_about_users(list_user)
+    user_info = users.get_info_about_users(list_user)
     # get info for all followers of user
     followers = followers.get_info_about_followers(-1, user_info["followers_count"] , screen_name=screen_name)
     
