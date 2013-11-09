@@ -33,12 +33,12 @@ def save_get_today_followers_list(screen_name):
     
     list_user = [screen_name]
     # get info on user so that we can access its followers count
-    user_info = users.get_info_about_users(list_user)
+    user_info = users.get_info_about_users(screen_names=list_user)
     # get info for all followers of user
-    followers = followers.get_info_about_followers(-1, user_info["followers_count"] , screen_name=screen_name)
+    user_followers = followers.get_info_about_followers(-1, user_info[0]["followers_count"] , screen_name=screen_name)
     
     # saving today's list
-    save.save_list_to_file(followers, DIR_FOL+screen_name+today_followers_file)
+    save.save_list_to_file(user_followers, DIR_FOL+screen_name+today_followers_file)
     
     return followers
         

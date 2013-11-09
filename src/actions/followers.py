@@ -48,6 +48,7 @@ def get_followers_ids(cursor, limit, screen_name=None, user_id=None):
     # returns the needed results
     return result[:limit]
 
+# TESTED
 def get_info_about_followers (cursor, limit, screen_name=None, user_id=None):
     """Get followers of screen_name/user_id information (all information on them)"""
         

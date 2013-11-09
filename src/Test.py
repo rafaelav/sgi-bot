@@ -70,8 +70,8 @@ def test_datastore_load():
     loaded_list = load.load_list_from_file("test_save")
     print loaded_list
     
-test_datastore_save()
+"""test_datastore_save()
 test_datastore_load()
 test_actions_followers()
-test_actions_users()
+test_actions_users()"""
 test_actions_main()
