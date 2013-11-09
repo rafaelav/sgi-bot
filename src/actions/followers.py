@@ -49,7 +49,7 @@ def get_followers_ids(cursor, limit, screen_name=None, user_id=None):
     return result[:limit]
 
 def get_info_about_followers (cursor, limit, screen_name=None, user_id=None):
-    """Get followers information (all information on them)"""
+    """Get followers of screen_name/user_id information (all information on them)"""
         
     # Must have either screen_name or user_id (logical xor)
     assert (screen_name != None) != (user_id != None), \
