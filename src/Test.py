@@ -55,8 +55,22 @@ def test_actions_users():
 
 ######################################### TEST main
 def test_actions_main():
-    print "TEST actions: get and save today's followers list"
-    main.save_get_today_followers_list(username)
+    #print "TEST actions: get and save today's followers list"
+    #main.save_get_today_followers_list(username)
+    followers_data = load.load_list_from_file("Followers/rafaela0621_followers_9.11.2013")
+    
+    print "pick_random_users_from_list (for 10 - run it more times and see it's random):"
+    picked_users = main.pick_random_users_from_list(followers_data, 2)
+    print len(picked_users)
+    for u in picked_users:
+        print u["screen_name"]
+    
+    print "pick_random_follow_count ( run it more times and see it's random):"
+    follow_count_dict = main.gen_random_follow_count(picked_users, max_count=2)
+    for key, val in follow_count_dict.items():
+        print key," -> ",val
+        
+    main.follow_users_followers(picked_users, follow_count_dict, username)
     
 ######################################### TESTING datastore 
 ######################################### TEST saves
