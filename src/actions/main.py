@@ -65,8 +65,11 @@ def save_get_today_followers_list(screen_name, option):
     return followers
         
 def is_worth_following(user):
-    """TODO - Checks if a user is worth following and returns True/False"""
-    
+    """TODO Checks if a user is worth following and returns True/False"""
+    if user["lang"] != "en":
+        return False
+    if user["followers_count"] < 50 or user["followers_count"] > 1000:
+        return False
     return True
 
 # TESTED                    
@@ -93,7 +96,7 @@ def gen_random_follow_count(users, max_count=10):
     rand_dict = dict()
     
     for user in users:
-        r = randint(0,max_count)
+        r = randint(1,max_count)
         rand_dict[user["screen_name"]] = r
     
     return rand_dict
@@ -107,6 +110,8 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
     for user in users_list:
         # will keep track of how many people have been followed from followers of user
         followed = 0
+        
+        print "[INFO] Need to follow -- ",follow_count_each[user["screen_name"]]," -- from -- ",user["screen_name"]
         
         # get first 5000 ids of followers
         followers_ids = followers.get_followers_ids(-1, MAX, screen_name=user["screen_name"])
@@ -123,14 +128,14 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
             
             # if not following already we'll follow
             if potential_friend[0]["follow_request_sent"] != True and potential_friend[0]["following"] != True and potential_friend[0]["screen_name"]!=my_screen_name:  
-                worth_following = is_worth_following(potential_friend)
+                worth_following = is_worth_following(potential_friend[0])
             else:
                 print "[INFO] NOT added (following) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
                 
             # if yes -> follow and increase followed count
             if worth_following:
                 twitter_api.friendships.create(screen_name=potential_friend[0]["screen_name"])
-                print "[INFO] Added ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
+                print "[INFO][",followed+1,"] Added ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
                 followed = followed + 1
             else:
                 print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]                      
