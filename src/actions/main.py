@@ -43,7 +43,7 @@ def save_get_today_friends_list(screen_name, option):
     # saving today's list
     save.save_list_to_file(user_friends, DIR_FR+screen_name+"_"+option+"_"+today_friends_file)
     
-    return followers
+    return user_friends
     
 #TESTED
 def save_get_today_followers_list(screen_name, option):
@@ -62,7 +62,7 @@ def save_get_today_followers_list(screen_name, option):
     # saving today's list
     save.save_list_to_file(user_followers, DIR_FOL+screen_name+"_"+option+"_"+today_followers_file)
     
-    return followers
+    return user_followers
         
 def is_worth_following(user):
     """TODO Checks if a user is worth following and returns True/False"""
