@@ -13,16 +13,24 @@ Actions which are part of the bot's strategy
 
 from connection import twitterapi
 from actions import followers, users, friends
-from datastore import save
+from datastore import save,load
 from random import randint
 import datetime
 
 twitter_api = twitterapi.oauth_login()
 now = datetime.datetime.now()
-today_followers_file = "_followers_" +str(now.day)+"."+str(now.month)+"."+str(now.year)
-today_friends_file = "_friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
+today_followers_file = "followers_" +str(now.day)+"."+str(now.month)+"."+str(now.year)
+today_friends_file = "friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
+today_black_list = "blacklist_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
+
+if now.day == 1:
+    yesterday_black_list = "blacklist_"+"30"+"."+str(now.month-1)+"."+str(now.year)
+else:
+    yesterday_black_list = "blacklist_"+str(now.day-1)+"."+str(now.month)+"."+str(now.year)
+    
 DIR_FOL = "Followers/"
 DIR_FR = "Friends/"
+DIR_BL = "Blacklist/"
 
 # get and save today's friends list (the list is saved but is also returned)
 def save_get_today_friends_list(screen_name, option):
@@ -73,7 +81,7 @@ def is_worth_following(user):
     return True
 
 # TESTED                    
-def pick_random_users_from_list(users, count):
+def pick_random_users_from_list(users, count, start=0, end=None):
     """Randomly selects users from user list (at most count)"""
     
     # when asking for more than exist, just return all followers
@@ -83,9 +91,13 @@ def pick_random_users_from_list(users, count):
     # list with picked followers
     picked_users = []
     
-    # generating random 'count' numbers in between 0 and the total number of followers
+    # generating random 'count' numbers in between 0 (or start) and the total number of followers
     for i in range(0,count):
-        r = randint(0,len(users))
+        if end is not None:
+            r = randint(start,end) # -1 because it can generate also that number
+        else:
+            r = randint(start,len(users)-1) # -1 because it can generate also that number
+        print r
         picked_users.append(users[r])
     
     return picked_users
@@ -138,4 +150,29 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
                 print "[INFO][",followed+1,"] Added ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
                 followed = followed + 1
             else:
-                print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]                      
+                print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
+
+# TESTED        
+def unfollow_unfollowers(users):
+    """Unfollows the users in the given list"""
+    for user in users:
+        twitter_api.friendships.destroy(screen_name = user["screen_name"])    
+
+# TESTED        
+def check_if_follow_back(user, followers_ids):
+    """Returns True if user follows back and False if note"""
+    if user["id_str"] not in followers_ids:  
+        return False
+    return True       
+
+# TESTED
+def add_to_blacklist(users_ids):
+    new_black_list = []
+    new_black_list = new_black_list + load.load_list_from_file(DIR_BL+yesterday_black_list)
+    print "Blacklist from before: ",new_black_list
+    
+    for user_id in users_ids:
+        new_black_list.append(user_id)
+    
+    print "New blacklist from before: ",new_black_list    
+    save.save_list_to_file(new_black_list, DIR_BL+today_black_list)

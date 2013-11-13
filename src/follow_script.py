@@ -8,9 +8,10 @@ Automatically follows people who are following the initial ones
 import all_script_methods
 from random import randint
 from datastore import load
+from time import sleep
 
 # random number of turns for following (1 or 2 per day)
-random_turns_fol = randint(1,2) # one turn
+random_turns_fol = randint(1,3) # one turn
 print "Following turns: ",random_turns_fol
     
 # initial users (can be friends/followers/legacy friends
@@ -27,7 +28,6 @@ for user in initial_users:
         
 # +1 because it can't be range (1,1)
 for i in range(1,random_turns_fol+1):
-    # TODO - add random time for turn start
     if len(given_initial_users_list) > 0:
         # random number of how many to follow from each user
         print "Given"
@@ -47,3 +47,6 @@ for i in range(1,random_turns_fol+1):
         print "From each user: ", from_each_user_count
         
         all_script_methods.follow_script("random", given_initial_users_list,from_each_user_count,from_initial_users_count=from_initial_users_count)
+        # generating random waiting time before next round
+    wait_time = randint(60*60,4*60*60) # between 1h and 4h 
+    sleep(wait_time)

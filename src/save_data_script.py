@@ -4,14 +4,6 @@ Created on Nov 11, 2013
 @author: rafaela
 '''
 
-from actions import main
+import all_script_methods
 
-screen_name = "jennifer_s_life"
-
-# data/ids (either everything or just ids)
-data = main.save_get_today_friends_list(screen_name, "data")
-print "Friends data retrieved: ",len(data)
-
-# data/ids (either everything or just ids)
-data = main.save_get_today_followers_list(screen_name, "data")
-print "Followers data retrieved: ",len(data)
+all_script_methods.save_data_until_today_script("data", "data")
