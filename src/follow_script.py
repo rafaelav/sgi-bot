@@ -20,7 +20,7 @@ initial_users = load.load_list_from_file("core_friends_data")
 from_initial_users_count = randint (4/random_turns_fol, 11/random_turns_fol)     
 
 # given users (if we want to follow from specific users)
-given_initial_users_screen_names = ["mashsocialmedia","newscientist","socialmedia2day","jeffbullas"]
+given_initial_users_screen_names = []
 given_initial_users_list = []
 for user in initial_users:
     if user["screen_name"] in given_initial_users_screen_names:
@@ -46,8 +46,8 @@ for i in range(1,random_turns_fol+1):
         from_each_user_count = (100/from_initial_users_count)/random_turns_fol
         print "From each user: ", from_each_user_count
         
-        all_script_methods.follow_script("random", given_initial_users_list,from_each_user_count,from_initial_users_count=from_initial_users_count)
+        all_script_methods.follow_script("random", initial_users,from_each_user_count,from_initial_users_count=from_initial_users_count)
         # generating random waiting time before next round
-    wait_time = randint(60*60,4*60*60) # between 1h and 4h
+    wait_time = randint(20*60,45*60) # between 1h and 4h
     print "Sleep time ... ",wait_time/60 
     sleep(wait_time)

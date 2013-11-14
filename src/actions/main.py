@@ -16,12 +16,16 @@ from actions import followers, users, friends
 from datastore import save,load
 from random import randint
 import datetime
+from nltk.corpus import stopwords
+import string
 
 twitter_api = twitterapi.oauth_login()
 now = datetime.datetime.now()
 today_followers_file = "followers_" +str(now.day)+"."+str(now.month)+"."+str(now.year)
 today_friends_file = "friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
 today_black_list = "blacklist_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
+bio_bad_words = "bio_bad_words"
+bio_good_words = "bio_good_words"
 
 if now.day == 1:
     yesterday_black_list = "blacklist_"+"30"+"."+str(now.month-1)+"."+str(now.year)
@@ -71,14 +75,67 @@ def save_get_today_followers_list(screen_name, option):
     save.save_list_to_file(user_followers, DIR_FOL+screen_name+"_"+option+"_"+today_followers_file)
     
     return user_followers
+
+# TESTED (in previous homework)
+def get_words_from_text(text):
+    """Removes punctuation and returns only the list of words - punctuation = !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
+    formated_text = "".join(l for l in text if l not in string.punctuation)
+    return formated_text.split()
+
+# TESTED (in previous homework)
+def get_tokens(text):
+    """Returns words of given text (tokens) but with lower letters and ignoring stopwords"""
+    word_list_lower = []
+    word_list = get_words_from_text(text)
+    
+    # convert all words to lower case
+    for w in word_list:
+        # we need to check if it's english word and if it's not stopword
+        if w.lower() not in stopwords.words('english'):# and d.check(w) == True:
+            word_list_lower.append(w.lower())
         
+    return word_list_lower
+
+# TESTED
+def contains_any_from_tokens(words_lower, token_list):
+    """Gets a list with words in lowercase and tests if they contain words from the second list"""
+    for word in words_lower:
+        if word in token_list:
+            print "[User-2-Follow] Description contains word: ",word
+            return True
+    return False
+
+# tested up til now                
 def is_worth_following(user):
     """TODO Checks if a user is worth following and returns True/False"""
     if user["lang"] != "en":
         return False
-    if user["followers_count"] < 50 or user["followers_count"] > 1000:
+    if user["followers_count"] < 50: #or user["followers_count"] > 3000:
         return False
-    return True
+    
+    # analysing descrisption of the user
+    description = user["description"]
+    
+    # no description (basically someone who didn't care how they look or who is not very good at using twitter)
+    if len(description) < 1:
+        return False 
+    
+    words_lower = get_tokens(description)
+    bad_tokens = load.load_list_from_file(bio_bad_words)
+    good_tokens = load.load_list_from_file(bio_good_words)
+    
+    # if at least one of the bad words is identified -> we don't follow
+    if contains_any_from_tokens(words_lower, bad_tokens):
+        return False
+    
+    # if any of the good words are identified and there was no bad word -> follow
+    if contains_any_from_tokens(words_lower, good_tokens):
+        return True
+    
+    # TODO
+    # if no good and no bad -> we decide based on happiness rating of last 200 tweets and frequency of posting
+    
+    return True # to change to false when added the happiness & freq of posting
 
 # TESTED                    
 def pick_random_users_from_list(users, count, start=0, end=None):

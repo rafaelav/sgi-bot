@@ -20,14 +20,19 @@ def save_data_until_today_script(option_friends, option_followers):
     print "Followers data retrieved: ",len(data)
 
 # TESTED
-def follow_script(option, initial_users, froam_each_user_count, from_initial_users_count=None):    
+def follow_script(option, initial_users, from_each_user_count, from_initial_users_count=None): 
+    print "Follow script started"   
     if option == "random":       
         # get random in order to get from their followers some new friends
         picked = main.pick_random_users_from_list(initial_users, from_initial_users_count)
     elif option == "given":
         picked = initial_users
     
-    picked_with_count = main.gen_random_follow_count(picked, froam_each_user_count)
+    for user in picked:
+        print "Picked - ",user["screen_name"]
+    
+    # can follow max from_each_user_count
+    picked_with_count = main.gen_random_follow_count(picked, from_each_user_count)
     # start following
     main.follow_users_followers(picked, picked_with_count, screen_name)    
 
@@ -35,7 +40,7 @@ def follow_script(option, initial_users, froam_each_user_count, from_initial_use
 def unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow):
     """Unfollows at most the given number of people randomly from the friends list 
     (if it can find as many who don't follow back and if they are not in the special_users_list)"""
-    
+    print "Unfollow script started"
     to_unfollow = []
     
     # get random in order to get from their followers some new friends

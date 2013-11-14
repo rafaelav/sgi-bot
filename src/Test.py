@@ -69,7 +69,7 @@ def test_actions_users():
 ######################################### TEST main
 def test_actions_main():
     #print "TEST actions: get and save today's followers list"
-    main.save_get_today_followers_list("jennifer_s_life", "ids")
+    #main.save_get_today_followers_list("jennifer_s_life", "ids")
     """followers_data = load.load_list_from_file("Followers/rafaela0621_followers_9.11.2013")
     
     print "pick_random_users_from_list (for 10 - run it more times and see it's random):"
@@ -84,6 +84,18 @@ def test_actions_main():
         print key," -> ",val
         
     main.follow_users_followers(picked_users, follow_count_dict, username)"""
+    
+    # get today's friends list
+    friends_list = load.load_list_from_file("Friends/jennifer_s_life_data_friends_14.11.2013")
+    for user in friends_list:
+        if main.is_worth_following(user):
+            print user["screen_name"]," descriprion:"
+            print user["description"]
+            print user["screen_name"]," is worth following"
+        else:
+            print user["screen_name"]," descriprion:"
+            print user["description"]
+            print user["screen_name"]," is NOT worth following"
     
 ######################################### TESTING datastore 
 ######################################### TEST saves
