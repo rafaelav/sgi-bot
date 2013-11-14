@@ -48,5 +48,6 @@ for i in range(1,random_turns_fol+1):
         
         all_script_methods.follow_script("random", given_initial_users_list,from_each_user_count,from_initial_users_count=from_initial_users_count)
         # generating random waiting time before next round
-    wait_time = randint(60*60,4*60*60) # between 1h and 4h 
+    wait_time = randint(60*60,4*60*60) # between 1h and 4h
+    print "Sleep time ... ",wait_time/60 
     sleep(wait_time)

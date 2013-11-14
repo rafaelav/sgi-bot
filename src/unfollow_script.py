@@ -35,4 +35,5 @@ for i in range(1,random_turns_unfol+1):
     all_script_methods.unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow)
     # generating random waiting time before next round
     wait_time = randint(20*60,5*60*60) # between (20mins) and 5h 
+    print "Sleep time ... ",wait_time/60
     sleep(wait_time)
