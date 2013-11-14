@@ -85,8 +85,10 @@ def unfollow_script(friends_list, followers_list, special_users_screen_names_lis
             to_unfollow.append(user)
             to_blacklist.append(user["id_str"])
     
-    # adding removed to blacklist
-    main.add_to_blacklist(to_blacklist)
-    
     if len(to_unfollow)>0:
         main.unfollow_unfollowers(to_unfollow)
+    
+    return to_blacklist
+
+def update_black_list(to_blacklist):
+    main.add_to_blacklist(to_blacklist)

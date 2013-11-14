@@ -31,9 +31,15 @@ followers_list = load.load_list_from_file(DIR_FOL+today_followers_file)
 special_users_screen_names_list = load.load_list_from_file(core_friends_screen_names_file)
 print special_users_screen_names_list
 
+# will contain users that are eliminated and that will be added to black list
+to_blacklist = []
 for i in range(1,random_turns_unfol+1):
-    all_script_methods.unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow)
+    blacklisted = all_script_methods.unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow)
+    print "[Unfollow-",i,"]To unfollow: ",blacklisted
+    to_blacklist = to_blacklist + blacklisted 
     # generating random waiting time before next round
-    wait_time = randint(20*60,5*60*60) # between (20mins) and 5h 
+    wait_time = randint(20*60,1*60*60) # between (20mins) and 1h 
     print "Sleep time ... ",wait_time/60
     sleep(wait_time)
+
+all_script_methods.update_black_list(to_blacklist)
