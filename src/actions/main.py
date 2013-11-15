@@ -26,6 +26,7 @@ today_friends_file = "friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year
 today_black_list = "blacklist_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
 bio_bad_words = "bio_bad_words"
 bio_good_words = "bio_good_words"
+stats_happyiness_file ="happiness_ratings.txt"
 
 if now.day == 1:
     yesterday_black_list = "blacklist_"+"30"+"."+str(now.month-1)+"."+str(now.year)
@@ -96,6 +97,83 @@ def get_tokens(text):
         
     return word_list_lower
 
+############ HAPPINESS ############
+# TESTED in previous assignments
+def get_happiness_of_words():
+    """Returns a dictionary (key = word, value = happiness q)"""
+    
+    text = load.load_text_from_file(stats_happyiness_file)
+    
+    # skip initial non interesting things
+    text = text[172:]
+    
+    # make list ignoring spaces
+    text_list = text.split()
+    #print text_list[:10]
+    
+    # getting words & ratings for them
+    crt = 0
+    word_list = []
+    rating_list = []
+    for word in text_list:
+        if crt % 8 == 0:
+            word_list.append(word)
+            rating_list.append(text_list[crt+2])
+        crt = crt + 1
+    
+    # making dictionary with data
+    dictionary = dict()
+    crt = 0
+    while crt < len(word_list):
+        dictionary[word_list[crt]]=rating_list[crt]
+        crt = crt + 1
+    return dictionary
+
+# TESTED in other assignments
+def get_tweets_text(user):
+    """ Returns the concatenated text of the last 200 tweets of the user"""
+    tweets = users.get_user_tweets(screen_name=user["screen_name"])
+    
+    # getting full text of tweets in this
+    fulltext = ""
+    
+    for tweet in tweets:
+        if tweet["lang"]=="en":        
+            fulltext = fulltext +" "+tweet["text"] # full text    
+    
+    return fulltext
+
+# TESTED in other assignments
+def get_happiness_level(user):
+    """Returns sum of happines values, happiness value (calculated only for words found in list, number of words found """
+    fulltext = get_tweets_text(user)
+    
+    word_list_lower = []
+    
+    # all words used in the users tweets
+    words_list = get_words_from_text(fulltext)
+
+    # convert all words to lower case (this == This)
+    for w in words_list:
+        word_list_lower.append(w.lower())
+    
+    # sum of happiness per each word and then division to get average happiness
+    happiness_dict = get_happiness_of_words()
+    suma = 0.0
+    used_words = 0
+    for word in word_list_lower:
+        if happiness_dict.get(word) is not None :
+            suma = suma + float(happiness_dict.get(word))
+            used_words = used_words + 1 #only found words for happiness we use in division
+            
+    # maybe no words from list where used
+    if suma == 0:
+        return suma, used_words,0
+    
+    #print "words = ",len(word_list_lower)," --- ",suma," / ",used_words," = ",suma/used_words
+    return suma, used_words, suma/used_words
+##########################################
+
 # TESTED
 def contains_any_from_tokens(words_lower, token_list):
     """Gets a list with words in lowercase and tests if they contain words from the second list"""
@@ -132,8 +210,12 @@ def is_worth_following(user):
     if contains_any_from_tokens(words_lower, good_tokens):
         return True
     
-    # TODO
     # if no good and no bad -> we decide based on happiness rating of last 200 tweets and frequency of posting
+    suma, used_words, happiness = get_happiness_level(user)
+    print "[",user["screen_name"],"] happiness: ", happiness, " = ",suma," : ",used_words
+    if happiness<5.0:
+        print "[",user["screen_name"],"] Not happy enough" 
+        return False
     
     return True # to change to false when added the happiness & freq of posting
 

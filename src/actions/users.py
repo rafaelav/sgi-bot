@@ -97,4 +97,15 @@ def get_users_ids_from_list_users(users):
     for user in users:
         result.append(user["id_str"])
     
-    return result        
+    return result     
+
+# TESTED in other assignments
+def get_user_tweets(screen_name=None, user_id=None, tweets_limit=200):
+    """ Gets the tweets of the given user (if not specified, only last 200)"""
+    # Must have either screen_name or user_id (logical xor)
+    assert (screen_name != None) != (user_id != None), \
+    "Must have screen_name or user_id, but not both"
+    
+    tweets_data = twitterapi.make_twitter_request(twitter_api.statuses.user_timeline, 
+                              count=tweets_limit, user_id=user_id)
+    return tweets_data   

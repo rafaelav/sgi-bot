@@ -14,3 +14,8 @@ def load_list_from_file(filename):
     with io.open('{0}'.format(filename), encoding='utf-8') as f:
         elem = f.read()
         return ast.literal_eval(elem)
+    
+# TESTED (in previous assignments)
+def load_text_from_file(filename):
+    with io.open('{0}'.format(filename), encoding='utf-8') as f:
+        return f.read()
