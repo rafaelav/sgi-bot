@@ -19,6 +19,7 @@ from time import sleep
 import datetime
 from nltk.corpus import stopwords
 import string
+import time
 
 twitter_api = twitterapi.oauth_login()
 now = datetime.datetime.now()
@@ -27,6 +28,7 @@ today_friends_file = "friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year
 today_black_list = "blacklist_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
 bio_bad_words = "bio_bad_words"
 bio_good_words = "bio_good_words"
+legacies_data_file = "core_friends_data"
 stats_happyiness_file ="happiness_ratings.txt"
 
 if now.day == 1:
@@ -37,7 +39,7 @@ else:
 DIR_FOL = "Followers/"
 DIR_FR = "Friends/"
 DIR_BL = "Blacklist/"
-
+DIR_LU = "LegaciesTweets/"
 # get and save today's friends list (the list is saved but is also returned)
 def save_get_today_friends_list(screen_name, option):
     """Get and save today's friends list (the list is saved but is also returned)"""
@@ -178,6 +180,31 @@ def get_happiness_level(user):
     
     #print "words = ",len(word_list_lower)," --- ",suma," / ",used_words," = ",suma/used_words
     return suma, used_words, suma/used_words
+
+def get_tweet_happiness(tweet):
+    # all words used in the users tweets
+    words_list = get_words_from_text(tweet['text'])
+
+    word_list_lower = []
+    # convert all words to lower case (this == This)
+    for w in words_list:
+        word_list_lower.append(w.lower())
+    
+    # sum of happiness per each word and then division to get average happiness
+    happiness_dict = get_happiness_of_words()
+    suma = 0.0
+    used_words = 0
+    for word in word_list_lower:
+        if happiness_dict.get(word) is not None :
+            suma = suma + float(happiness_dict.get(word))
+            used_words = used_words + 1 #only found words for happiness we use in division
+            
+    # maybe no words from list where used
+    if suma == 0:
+        return 4.5 # if no words where found we'll assume it's a slightly sad tweet
+    
+    #print "words = ",len(word_list_lower)," --- ",sum," / ",used_words," = ",sum/used_words
+    return suma/used_words    
 ##########################################
 
 # TESTED
@@ -324,3 +351,52 @@ def add_to_blacklist(users_ids):
     
     print "New blacklist from before: ",new_black_list    
     save.save_list_to_file(new_black_list, DIR_BL+today_black_list)
+    
+def get_tweets_from_legacies():
+    """Gets last 200 tweets from legacy friends and saves them in a file for each user"""
+    legacies = load.load_list_from_file(legacies_data_file)
+    
+    for legacy in legacies:
+        tweets = users.get_user_tweets(screen_name=legacy["screen_name"])
+        save.save_list_to_file(tweets, DIR_LU+legacy["screen_name"])
+# TESTED in assignment
+def get_tweet_mentions(tweet):
+    """ Returns the number of "@" in tweet"""
+    
+    if tweet["entities"].get("user_mentions") is None:
+        return 0
+    return len(tweet["entities"]["user_mentions"])
+
+# TESTED in assignment
+def get_tweet_links(tweet):
+    """Returns the number of links in tweet"""
+    
+    if tweet["entities"].get("urls") is None:
+        return 0
+    return len(tweet["entities"]["urls"])
+
+# TESTED in assignment
+def get_tweet_hashes(tweet):
+    """Returns the number of "#" in tweet"""
+    
+    if tweet["entities"].get("hashtags") is None:
+        return 0
+    return len(tweet["entities"]["hashtags"])
+
+# TESTED in assignment
+def get_unix_time_of_tweet_creation(tweet):
+    """Returns the time at which the tweet was created"""
+    
+    # calculate time of last post in Unix epoch
+    time_last_post = time.mktime(time.strptime(tweet['created_at'],"%a %b %d %H:%M:%S +0000 %Y"))
+    return time_last_post
+
+# TESTED in assignment
+def get_tweet_len(tweet):
+    """ Returns the number of chars in tweet"""
+    return len(tweet['text'])
+
+# TESTED in assignment
+def get_tweet_sentiment(tweet):
+    """ Returns the happiness level of tweet"""
+    return get_tweet_happiness(tweet)

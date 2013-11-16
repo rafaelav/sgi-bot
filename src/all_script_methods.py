@@ -92,3 +92,6 @@ def unfollow_script(friends_list, followers_list, special_users_screen_names_lis
 
 def update_black_list(to_blacklist):
     main.add_to_blacklist(to_blacklist)
+    
+def retrieve_legacies_tweets():
+    main.get_tweets_from_legacies()
