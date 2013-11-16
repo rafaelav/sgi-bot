@@ -20,6 +20,8 @@ import datetime
 from nltk.corpus import stopwords
 import string
 import time
+from training import check_hb
+
 
 twitter_api = twitterapi.oauth_login()
 now = datetime.datetime.now()
@@ -30,6 +32,8 @@ bio_bad_words = "bio_bad_words"
 bio_good_words = "bio_good_words"
 legacies_data_file = "core_friends_data"
 stats_happyiness_file ="happiness_ratings.txt"
+bots_filename = 'bots_features.txt'
+humans_filename = 'users_features.txt'
 
 if now.day == 1:
     yesterday_black_list = "blacklist_"+"30"+"."+str(now.month-1)+"."+str(now.year)
@@ -40,6 +44,8 @@ DIR_FOL = "Followers/"
 DIR_FR = "Friends/"
 DIR_BL = "Blacklist/"
 DIR_LU = "LegaciesTweets/"
+DIR_TR = 'Training/'
+
 # get and save today's friends list (the list is saved but is also returned)
 def save_get_today_friends_list(screen_name, option):
     """Get and save today's friends list (the list is saved but is also returned)"""
@@ -101,8 +107,8 @@ def get_tokens(text):
     return word_list_lower
 
 def wait_random_time():
-    wait_time = randint(60,3*60) # between 1min and 3min
-    print "Sleep time before trying to follow next user... ",wait_time/60," sec" 
+    wait_time = randint(45,5*60) # between 1min and 3min
+    print "Sleep time before trying to follow/unfollow next user... ",wait_time," sec" 
     sleep(wait_time)
 
 ############ HAPPINESS ############
@@ -217,7 +223,7 @@ def contains_any_from_tokens(words_lower, token_list):
     return False
 
 # tested up til now                
-def is_worth_following(user):
+def is_worth_following(user,hb_clas):
     """TODO Checks if a user is worth following and returns True/False"""
     if user["lang"] != "en":
         return False
@@ -248,6 +254,10 @@ def is_worth_following(user):
     print "[",user["screen_name"],"] happiness: ", happiness, " = ",suma," : ",used_words
     if happiness<5.0:
         print "[",user["screen_name"],"] Not happy enough" 
+        return False
+    
+    #if true, the user is a bot, and we dont follow bots
+    if check_hb(user, hb_clas) == True:
         return False
     
     return True # to change to false when added the happiness & freq of posting
@@ -288,7 +298,7 @@ def gen_random_follow_count(users, max_count=10):
 # follows a number of users randomly from the pool of friends of a list of people
 
 # TESTED
-def follow_users_followers(users_list, follow_count_each, my_screen_name):
+def follow_users_followers(users_list, follow_count_each, my_screen_name,hb_clas):
     """Follows a number of users randomly from the pool of followers of a list of people"""
     MAX = 5000
     for user in users_list:
@@ -312,7 +322,7 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
             
             # if not following already we'll follow
             if potential_friend[0]["follow_request_sent"] != True and potential_friend[0]["following"] != True and potential_friend[0]["screen_name"]!=my_screen_name:  
-                worth_following = is_worth_following(potential_friend[0])
+                worth_following = is_worth_following(potential_friend[0],hb_clas)
             else:
                 print "[INFO] NOT added (following) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
                 
