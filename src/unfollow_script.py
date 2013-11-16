@@ -10,6 +10,8 @@ from datastore import load
 from time import sleep
 import datetime
 
+start = datetime.datetime.now()
+
 screen_name = "jennifer_s_life"
 now = datetime.datetime.now()
 today_friends_file = screen_name+"_data"+"_friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
@@ -43,3 +45,7 @@ for i in range(1,random_turns_unfol+1):
     sleep(wait_time)
 
 all_script_methods.update_black_list(to_blacklist)
+
+end = datetime.datetime.now()
+print "[UNFOLLOW] Started at: ",start
+print "[UNFOLLOW] Ended at: ",end

@@ -9,6 +9,9 @@ import all_script_methods
 from random import randint
 from datastore import load
 from time import sleep
+import datetime
+
+start = datetime.datetime.now()
 
 # random number of turns for following (1 or 2 per day)
 random_turns_fol = randint(1,3) # one turn
@@ -51,3 +54,7 @@ for i in range(1,random_turns_fol+1):
     wait_time = randint(60*60,2*60*60) # between 1h and 2h
     print "Sleep time ... ",wait_time/60 
     sleep(wait_time)
+
+end = datetime.datetime.now()
+print "[FOLLOW] Started at: ",start
+print "[FOLLOW] Ended at: ",end
