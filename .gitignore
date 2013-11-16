@@ -37,3 +37,6 @@ coverage.xml
 .mr.developer.cfg
 
 # Folders and data files
+a.py
+b.py
+c.py
