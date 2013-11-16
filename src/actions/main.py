@@ -21,6 +21,7 @@ from nltk.corpus import stopwords
 import string
 import time
 from training import check_hb
+import twitter
 
 
 twitter_api = twitterapi.oauth_login()
@@ -46,6 +47,24 @@ DIR_FR = "Friends/"
 DIR_BL = "Blacklist/"
 DIR_LU = "LegaciesTweets/"
 DIR_TR = 'Training/'
+
+def get_boston_id():
+    l=[]
+    count = 0
+    
+    twitter_stream = twitter.TwitterStream(auth=twitter_api.auth)
+    stream = twitter_stream.statuses.filter(locations = '-71.7,42.19,70.59,42.24')
+    
+    for tweet in stream:
+        if count == 2000:
+            break    
+        if tweet['lang'] == 'en':
+            if 'user' in tweet.keys():
+                if 'id_str' in tweet['user'].keys():
+                    l.append(tweet['user']['id_str'])
+                    count  = count + 1
+    
+    return l
 
 # get and save today's friends list (the list is saved but is also returned)
 def save_get_today_friends_list(screen_name, option):
