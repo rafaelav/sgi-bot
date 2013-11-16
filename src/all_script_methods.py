@@ -20,7 +20,7 @@ def save_data_until_today_script(option_friends, option_followers):
     print "Followers data retrieved: ",len(data)
 
 # TESTED
-def follow_script(option, initial_users, from_each_user_count, from_initial_users_count=None): 
+def follow_script(option, initial_users, from_each_user_count,hb_clas, from_initial_users_count=None): 
     print "Follow script started"   
     if option == "random":       
         # get random in order to get from their followers some new friends
@@ -34,7 +34,7 @@ def follow_script(option, initial_users, from_each_user_count, from_initial_user
     # can follow max from_each_user_count
     picked_with_count = main.gen_random_follow_count(picked, from_each_user_count)
     # start following
-    main.follow_users_followers(picked, picked_with_count, screen_name)    
+    main.follow_users_followers(picked, picked_with_count, screen_name,hb_clas)    
 
 # TESTED
 def unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow):
