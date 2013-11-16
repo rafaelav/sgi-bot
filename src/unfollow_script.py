@@ -23,7 +23,7 @@ DIR_FOL = "Followers/"
 random_turns_unfol = randint(1,3) # one turn
 print "Unfollowing turns: ",random_turns_unfol
 
-max_number_to_unfollow = randint (10/random_turns_unfol , 50/random_turns_unfol)
+max_number_to_unfollow = randint (30/random_turns_unfol , 60/random_turns_unfol)
 print "Decided to randomly unfollow at most: ", max_number_to_unfollow
 
 friends_list = load.load_list_from_file(DIR_FR+today_friends_file)

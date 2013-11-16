@@ -34,7 +34,7 @@ for i in range(1,random_turns_fol+1):
         print given_initial_users_list
         
         # depends in number of users and of turns
-        from_each_user_count = (100/len(given_initial_users_list))/random_turns_fol
+        from_each_user_count = (150/len(given_initial_users_list))/random_turns_fol
         print "From each user: ", from_each_user_count
         
         all_script_methods.follow_script("given", given_initial_users_list,from_each_user_count)
@@ -43,7 +43,7 @@ for i in range(1,random_turns_fol+1):
         print "Number of random users: ",from_initial_users_count
         
         # depends in number of users and of turns
-        from_each_user_count = (100/from_initial_users_count)/random_turns_fol
+        from_each_user_count = (150/from_initial_users_count)/random_turns_fol
         print "From each user: ", from_each_user_count
         
         all_script_methods.follow_script("random", initial_users,from_each_user_count,from_initial_users_count=from_initial_users_count)
