@@ -25,7 +25,7 @@ initial_users = load.load_list_from_file("core_friends_data")
 from_initial_users_count = randint (4/random_turns_fol, 11/random_turns_fol)     
 
 #train the human/bot classifier
-hb_clas = train_hb(bots_filename,humans_filename)
+hb_clas = train_hb(DIR_TR+bots_filename,DIR_TR+humans_filename)
 
 # given users (if we want to follow from specific users)
 given_initial_users_screen_names = []
