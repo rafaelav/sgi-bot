@@ -15,6 +15,7 @@ from connection import twitterapi
 from actions import followers, users, friends
 from datastore import save,load
 from random import randint
+from time import sleep
 import datetime
 from nltk.corpus import stopwords
 import string
@@ -96,6 +97,11 @@ def get_tokens(text):
             word_list_lower.append(w.lower())
         
     return word_list_lower
+
+def wait_random_time():
+    wait_time = randint(60,3*60) # between 1min and 3min
+    print "Sleep time before trying to follow next user... ",wait_time/60," sec" 
+    sleep(wait_time)
 
 ############ HAPPINESS ############
 # TESTED in previous assignments
@@ -288,6 +294,7 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
                 twitter_api.friendships.create(screen_name=potential_friend[0]["screen_name"])
                 print "[INFO][",followed+1,"] Added ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
                 followed = followed + 1
+                wait_random_time()
             else:
                 print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
 
@@ -295,7 +302,9 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name):
 def unfollow_unfollowers(users):
     """Unfollows the users in the given list"""
     for user in users:
-        twitter_api.friendships.destroy(screen_name = user["screen_name"])    
+        twitter_api.friendships.destroy(screen_name = user["screen_name"])
+        # wait before trying to unfollow someone new
+        wait_random_time()
 
 # TESTED        
 def check_if_follow_back(user, followers_ids):
