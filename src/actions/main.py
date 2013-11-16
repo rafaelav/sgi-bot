@@ -31,6 +31,7 @@ today_black_list = "blacklist_"+str(now.day)+"."+str(now.month)+"."+str(now.year
 bio_bad_words = "bio_bad_words"
 bio_good_words = "bio_good_words"
 legacies_data_file = "core_friends_data"
+legacies_features_file = "legacies_features"
 stats_happyiness_file ="happiness_ratings.txt"
 bots_filename = 'bots_features.txt'
 humans_filename = 'users_features.txt'
@@ -361,9 +362,11 @@ def add_to_blacklist(users_ids):
     
     print "New blacklist from before: ",new_black_list    
     save.save_list_to_file(new_black_list, DIR_BL+today_black_list)
-    
+
+########################## REGRESSION PREDICTION RELATED CODE ####     
+# TESTED
 def get_tweets_from_legacies():
-    """Gets last 200 tweets from legacy friends and saves them in a file for each user"""
+    """[RAN ONCE] Gets last 200 tweets from legacy friends and saves them in a file for each user"""
     legacies = load.load_list_from_file(legacies_data_file)
     
     for legacy in legacies:
@@ -410,3 +413,70 @@ def get_tweet_len(tweet):
 def get_tweet_sentiment(tweet):
     """ Returns the happiness level of tweet"""
     return get_tweet_happiness(tweet)
+    
+def get_features_of_legacies_tweets():
+    """ Saves the features of the tweets from legacies"""
+    legacies = load.load_list_from_file(legacies_data_file)
+            
+    # dictionaries with users, their no of friends, followers and ration between the two
+    users_friends_count_dict = dict()
+    users_followers_count_dict = dict()
+    users_ratio_dict = dict()
+    
+    for legacy in legacies:
+        users_friends_count_dict[legacy['screen_name']] = legacy["friends_count"] 
+        users_followers_count_dict[legacy['screen_name']] = legacy["followers_count"]
+        users_ratio_dict[legacy['screen_name']] = (legacy["followers_count"]+1.0)/(legacy["friends_count"]+1.0)
+    
+    # good tweets will have more than 3 RT
+    good_tweets = []
+    
+    for legacy in legacies:
+        legacy_file = DIR_LU+legacy["screen_name"]
+                          
+        legacy_tweets = load.load_list_from_file(legacy_file)
+        
+        for tweet in legacy_tweets:
+            if tweet["retweet_count"] >= 3:              
+                good_tweets.append(tweet)
+                
+    print "[Fav] Identified good tweetis from legacies: ",len(good_tweets)
+        #save_data("AllTweets",str(all_tweets_of_users))
+        
+    list_tweets_feat = []
+        
+    # get tweet features
+    for tweet in good_tweets:
+        mentions = get_tweet_mentions(tweet)
+        links = get_tweet_links(tweet)
+        hash_tags = get_tweet_hashes(tweet)
+        time_of_creation = get_unix_time_of_tweet_creation(tweet)
+        length_tweet = get_tweet_len(tweet)
+        sentiment_tweet = get_tweet_sentiment(tweet)
+        retweet_count = tweet['retweet_count']
+        verified = tweet['user']['verified']
+        listed_count = tweet['user']['listed_count']
+            
+        auth_followers = users_followers_count_dict[tweet['user']['screen_name']]
+        auth_friends = users_friends_count_dict[tweet['user']['screen_name']]
+        auth_ratio = users_ratio_dict[tweet['user']['screen_name']]
+        tweet_info = dict()
+            
+        tweet_info["mentions"] = mentions
+        tweet_info["links"] = links
+        tweet_info["hash_tags"] = hash_tags
+        tweet_info["time_of_creation"] = time_of_creation
+        tweet_info["length_tweet"] = length_tweet
+        tweet_info["sentiment_tweet"] = sentiment_tweet
+        tweet_info["auth_followers"] = auth_followers
+        tweet_info["auth_friends"] = auth_friends
+        tweet_info["auth_ratio"] = auth_ratio
+        tweet_info["retweet_count"] = retweet_count
+        tweet_info["verified"] = verified
+        tweet_info["listed_count"]= listed_count
+        
+        list_tweets_feat.append(tweet_info)
+    
+    save.save_list_to_file(list_tweets_feat, legacies_features_file)
+        
+##################################################################

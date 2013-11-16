@@ -95,3 +95,6 @@ def update_black_list(to_blacklist):
     
 def retrieve_legacies_tweets():
     main.get_tweets_from_legacies()
+
+def retrieve_legacies_features():
+    main.get_features_of_legacies_tweets()
