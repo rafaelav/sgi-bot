@@ -44,7 +44,7 @@ for i in range(1,random_turns_fol+1):
         
         # depends in number of users and of turns
         from_each_user_count = (150/from_initial_users_count)/random_turns_fol
-        print "From each user: ", from_each_user_count
+        print "From each user (max to foll): ", from_each_user_count
         
         all_script_methods.follow_script("random", initial_users,from_each_user_count,from_initial_users_count=from_initial_users_count)
         # generating random waiting time before next round
