@@ -113,8 +113,15 @@ def test_datastore_load():
 #test_datastore_load()
 #test_actions_followers()
 #test_actions_users()
-test_actions_main()
+#test_actions_main()
 #test_actions_friends()
+
+tweets_from_chrisbrogan = load.load_list_from_file("LegaciesTweets/chrisbrogan")
+for tweet in tweets_from_chrisbrogan:
+    print "Text: ",tweet["text"]
+    print "Retweeted: ", tweet["retweeted"]
+    print "Retweet count: ", tweet["retweet_count"]
+    print "Belongs to: ", tweet['user']['screen_name']
 
 # to save initial core friends of account jennifer_s_life
 """foll = friends.get_info_about_friends (-1, 80, screen_name="jennifer_s_life")

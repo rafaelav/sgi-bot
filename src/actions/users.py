@@ -107,5 +107,5 @@ def get_user_tweets(screen_name=None, user_id=None, tweets_limit=200):
     "Must have screen_name or user_id, but not both"
     
     tweets_data = twitterapi.make_twitter_request(twitter_api.statuses.user_timeline, 
-                              count=tweets_limit, user_id=user_id)
+                              count=tweets_limit, screen_name=screen_name)
     return tweets_data   

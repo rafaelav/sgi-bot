@@ -468,7 +468,9 @@ def get_features_of_legacies_tweets():
     users_followers_count_dict = dict()
     users_ratio_dict = dict()
     
+    legacies_screen_names = []
     for legacy in legacies:
+        legacies_screen_names.append(legacy["screen_name"])
         users_friends_count_dict[legacy['screen_name']] = legacy["friends_count"] 
         users_followers_count_dict[legacy['screen_name']] = legacy["followers_count"]
         users_ratio_dict[legacy['screen_name']] = (legacy["followers_count"]+1.0)/(legacy["friends_count"]+1.0)
@@ -482,7 +484,8 @@ def get_features_of_legacies_tweets():
         legacy_tweets = load.load_list_from_file(legacy_file)
         
         for tweet in legacy_tweets:
-            if tweet["retweet_count"] >= 3:              
+            # more than 2 RTs and it is not a RT-ed tweet
+            if tweet["retweet_count"] >= 10 and tweet["retweeted"]==False:              
                 good_tweets.append(tweet)
                 
     print "[Fav] Identified good tweetis from legacies: ",len(good_tweets)
