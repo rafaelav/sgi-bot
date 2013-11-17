@@ -35,6 +35,7 @@ print special_users_screen_names_list
 
 # will contain users that are eliminated and that will be added to black list
 to_blacklist = []
+
 for i in range(1,random_turns_unfol+1):
     blacklisted = all_script_methods.unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow)
     print "[Unfollow-",i,"]To unfollow: ",blacklisted
@@ -49,3 +50,4 @@ all_script_methods.update_black_list(to_blacklist)
 end = datetime.datetime.now()
 print "[UNFOLLOW] Started at: ",start
 print "[UNFOLLOW] Ended at: ",end
+print "[UNFOLLOW] Have unfollowed: ",len(to_blacklist)

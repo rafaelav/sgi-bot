@@ -34,7 +34,8 @@ def follow_script(option, initial_users, from_each_user_count,hb_clas, from_init
     # can follow max from_each_user_count
     picked_with_count = main.gen_random_follow_count(picked, from_each_user_count)
     # start following
-    main.follow_users_followers(picked, picked_with_count, screen_name,hb_clas)    
+    have_followed = main.follow_users_followers(picked, picked_with_count, screen_name,hb_clas)
+    return have_followed    
 
 # TESTED
 def unfollow_script(friends_list, followers_list, special_users_screen_names_list, max_number_to_unfollow):

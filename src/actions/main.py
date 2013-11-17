@@ -242,11 +242,28 @@ def contains_any_from_tokens(words_lower, token_list):
             return True
     return False
 
+def contains_sections(text):
+    if "follow back" in text.lower():
+        print "Description contains follow back"
+        return True
+    if "team follow" in text.lower():
+        print "Description contains team follow"
+        return True    
+    return False
+
 # tested up til now                
 def is_worth_following(user,hb_clas):
     """TODO Checks if a user is worth following and returns True/False"""
+    # check if in blacklist
+    black_list = load.load_list_from_file(DIR_BL+yesterday_black_list)
+    if user["id_str"] in black_list:
+        return False
+    
+    # check language
     if user["lang"] != "en":
         return False
+    
+    # check followers count
     if user["followers_count"] < 50: #or user["followers_count"] > 3000:
         return False
     
@@ -260,6 +277,10 @@ def is_worth_following(user,hb_clas):
     words_lower = get_tokens(description)
     bad_tokens = load.load_list_from_file(bio_bad_words)
     good_tokens = load.load_list_from_file(bio_good_words)
+    
+    # check some unwanted phrases
+    if contains_sections(user["description"]):
+        return False
     
     # if at least one of the bad words is identified -> we don't follow
     if contains_any_from_tokens(words_lower, bad_tokens):
@@ -321,6 +342,7 @@ def gen_random_follow_count(users, max_count=10):
 def follow_users_followers(users_list, follow_count_each, my_screen_name,hb_clas):
     """Follows a number of users randomly from the pool of followers of a list of people"""
     MAX = 5000
+    have_followed_in_total = 0
     for user in users_list:
         # will keep track of how many people have been followed from followers of user
         followed = 0
@@ -354,6 +376,10 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name,hb_clas
                 wait_random_time()
             else:
                 print "[INFO] NOT added (not worth) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
+        
+        have_followed_in_total = have_followed_in_total + followed
+    
+    return have_followed_in_total
 
 # TESTED        
 def unfollow_unfollowers(users):

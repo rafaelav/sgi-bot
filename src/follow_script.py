@@ -34,6 +34,8 @@ for user in initial_users:
     if user["screen_name"] in given_initial_users_screen_names:
         given_initial_users_list.append(user)
         
+have_followed = 0
+        
 # +1 because it can't be range (1,1)
 for i in range(1,random_turns_fol+1):
     if len(given_initial_users_list) > 0:
@@ -45,7 +47,7 @@ for i in range(1,random_turns_fol+1):
         from_each_user_count = (150/len(given_initial_users_list))/random_turns_fol
         print "From each user: ", from_each_user_count
         
-        all_script_methods.follow_script("given", given_initial_users_list,from_each_user_count,hb_clas)
+        have_followed = all_script_methods.follow_script("given", given_initial_users_list,from_each_user_count,hb_clas) + have_followed
     else:
         print "Random"
         print "Number of random users: ",from_initial_users_count
@@ -54,7 +56,7 @@ for i in range(1,random_turns_fol+1):
         from_each_user_count = (150/from_initial_users_count)/random_turns_fol
         print "From each user (max to foll): ", from_each_user_count
         
-        all_script_methods.follow_script("random", initial_users,from_each_user_count,hb_clas,from_initial_users_count=from_initial_users_count)
+        have_followed = all_script_methods.follow_script("random", initial_users,from_each_user_count,hb_clas,from_initial_users_count=from_initial_users_count) + have_followed
         # generating random waiting time before next round
     wait_time = randint(60*60,2*60*60) # between 1h and 2h
     print "Sleep time ... ",wait_time/60 
@@ -63,3 +65,4 @@ for i in range(1,random_turns_fol+1):
 end = datetime.datetime.now()
 print "[FOLLOW] Started at: ",start
 print "[FOLLOW] Ended at: ",end
+print "[FOLLOW] Have followed today: ",have_followed
