@@ -48,7 +48,7 @@ DIR_BL = "Blacklist/"
 DIR_LU = "LegaciesTweets/"
 DIR_TR = 'Training/'
 
-def get_boston_id():
+def get_boston_screen_name():
     l=[]
     count = 0
     
@@ -60,8 +60,8 @@ def get_boston_id():
             break    
         if tweet['lang'] == 'en':
             if 'user' in tweet.keys():
-                if 'id_str' in tweet['user'].keys():
-                    l.append(tweet['user']['id_str'])
+                if 'screen_name' in tweet['user'].keys():
+                    l.append(tweet['user']['screen_name'])
                     count  = count + 1
     
     return l
@@ -367,6 +367,7 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name,hb_clas
                 worth_following = is_worth_following(potential_friend[0],hb_clas)
             else:
                 print "[INFO] NOT added (following) ",potential_friend[0]["screen_name"]," - ",potential_friend[0]["id_str"]
+                continue
                 
             # if yes -> follow and increase followed count
             if worth_following:
@@ -381,6 +382,28 @@ def follow_users_followers(users_list, follow_count_each, my_screen_name,hb_clas
     
     return have_followed_in_total
 
+def follow_users(users_list,my_screen_name,hb_clas):
+    have_followed_in_total = 0
+    
+    all_users_data = users.get_info_about_users(screen_names=users_list)
+    for user in all_users_data:
+        # if not following already we'll follow
+        if user["follow_request_sent"] != True and user["following"] != True and user["screen_name"]!=my_screen_name:  
+            worth_following = is_worth_following(user,hb_clas)
+        else:
+            print "[INFO] NOT added (following) ",user["screen_name"]," - ",user["id_str"]
+            continue
+                
+        # if yes -> follow and increase followed count
+        if worth_following:
+            twitter_api.friendships.create(screen_name=user["screen_name"])
+            print "[INFO][",have_followed_in_total+1,"] Added ",user["screen_name"]," - ",user["id_str"]
+            have_followed_in_total = have_followed_in_total + 1
+            wait_random_time()
+        else:
+            print "[INFO] NOT added (not worth) ",user["screen_name"]," - ",user["id_str"]
+    
+    return have_followed_in_total        
 # TESTED        
 def unfollow_unfollowers(users):
     """Unfollows the users in the given list"""
