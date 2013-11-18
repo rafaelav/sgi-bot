@@ -36,6 +36,7 @@ def train_hb(bots_filename,humans_filename):
         
     gnb = GaussianNB()
     gnb.fit(train_set,train_results)
+    print 'Finished training succesfully'
     return gnb
 
 def create_user_core(user):
@@ -51,10 +52,10 @@ def create_user_core(user):
     tweets_per_hour = int(str(user['statuses_count'])) / number_of_hours
 
     user_core = []
-    user_core.append(str(user['followers_count']))
-    user_core.append(str(user['friends_count']))
-    user_core.append(str(user['statuses_count']))
-    user_core.append(str(tweets_per_hour))
+    user_core.append(float(user['followers_count']))
+    user_core.append(float(user['friends_count']))
+    user_core.append(float(user['statuses_count']))
+    user_core.append(float(tweets_per_hour))
     
     return user_core 
 
