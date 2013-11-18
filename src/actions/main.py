@@ -63,6 +63,7 @@ def get_boston_screen_name():
                 if 'screen_name' in tweet['user'].keys():
                     l.append(tweet['user']['screen_name'])
                     count  = count + 1
+                    print "[GETTING From BOSTON] reached: ",count
     
     return l
 
