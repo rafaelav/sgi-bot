@@ -56,7 +56,7 @@ def get_boston_screen_name():
     stream = twitter_stream.statuses.filter(locations = '-71.7,42.19,70.59,42.24')
     
     for tweet in stream:
-        if count == 2000:
+        if count == 500: #change back to 1000 or 2000 after testing
             break    
         if tweet['lang'] == 'en':
             if 'user' in tweet.keys():

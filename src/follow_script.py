@@ -15,7 +15,7 @@ from actions.training import train_hb
 from actions.main import DIR_TR,bots_filename,humans_filename
 
 start = datetime.datetime.now()
-
+my_screen_name = "jennifer_s_life"
 from_where = 1#randint(1,3) # 1 from Boston, 2 from followers of friends (legacies)
 
 if from_where == 1:
@@ -38,7 +38,7 @@ if from_where == 1:
     #train the human/bot classifier
     hb_clas = train_hb(DIR_TR+bots_filename,DIR_TR+humans_filename)
     
-    have_followed = main.follow_users(picked)
+    have_followed = main.follow_users(picked,my_screen_name,hb_clas)
 elif from_where == 2:  
     print "[FOLLOW] Following from LEGACIES' FOLLOWERS"  
     # random number of turns for following (1 or 2 per day)
