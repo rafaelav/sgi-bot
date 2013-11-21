@@ -4,7 +4,8 @@ Created on Nov 11, 2013
 This one runs once per day
 @author: rafaela
 '''
-from actions import main
+from actions import main,training
+import operator
 
 screen_name = "jennifer_s_life"
 
@@ -99,3 +100,17 @@ def retrieve_legacies_tweets():
 
 def retrieve_legacies_features():
     main.get_features_of_legacies_tweets()
+    
+def aproximate_rts(list_featured_features, list_candidates_for_fav):
+    """ Features are all normalized before being sent to favorite_script """
+    estimated_scores = ()
+    for i in range(0,len(list_candidates_for_fav)):
+        estimated_scores[list_candidates_for_fav[i]["tweet_id"]] = training.wknnestimate(list_featured_features,list_candidates_for_fav[i])
+    
+    # sort the dictionary based on how popular it is estimated that tweets will be
+    sorted_dict = sorted(estimated_scores.iteritems(), key=operator.itemgetter(1))
+    
+    return sorted_dict
+    
+def favorite_tweet(tweet_id):    
+    main.favorite_a_tweet(tweet_id,screen_name)

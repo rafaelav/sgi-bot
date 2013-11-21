@@ -32,7 +32,7 @@ today_black_list = "blacklist_"+str(now.day)+"."+str(now.month)+"."+str(now.year
 bio_bad_words = "bio_bad_words"
 bio_good_words = "bio_good_words"
 legacies_data_file = "core_friends_data"
-legacies_features_file = "legacies_features"
+features_file = "legacies_features"
 stats_happyiness_file ="happiness_ratings.txt"
 bots_filename = 'bots_features.txt'
 humans_filename = 'users_features.txt'
@@ -46,6 +46,7 @@ DIR_FOL = "Followers/"
 DIR_FR = "Friends/"
 DIR_BL = "Blacklist/"
 DIR_LU = "LegaciesTweets/"
+DIR_US = "UsersTweets/"
 DIR_TR = 'Training/'
 
 def get_boston_screen_name():
@@ -441,6 +442,7 @@ def get_tweets_from_legacies():
     for legacy in legacies:
         tweets = users.get_user_tweets(screen_name=legacy["screen_name"])
         save.save_list_to_file(tweets, DIR_LU+legacy["screen_name"])
+        
 # TESTED in assignment
 def get_tweet_mentions(tweet):
     """ Returns the number of "@" in tweet"""
@@ -484,30 +486,30 @@ def get_tweet_sentiment(tweet):
     return get_tweet_happiness(tweet)
     
 def get_features_of_legacies_tweets():
-    """ Saves the features of the tweets from legacies"""
-    legacies = load.load_list_from_file(legacies_data_file)
+    """ Saves the features of the legacy friends' tweets"""
+    list_users = load.load_list_from_file(legacies_data_file)
             
     # dictionaries with users, their no of friends, followers and ration between the two
     users_friends_count_dict = dict()
     users_followers_count_dict = dict()
     users_ratio_dict = dict()
     
-    legacies_screen_names = []
-    for legacy in legacies:
-        legacies_screen_names.append(legacy["screen_name"])
-        users_friends_count_dict[legacy['screen_name']] = legacy["friends_count"] 
-        users_followers_count_dict[legacy['screen_name']] = legacy["followers_count"]
-        users_ratio_dict[legacy['screen_name']] = (legacy["followers_count"]+1.0)/(legacy["friends_count"]+1.0)
+    users_screen_names = []
+    for user in list_users:
+        users_screen_names.append(user["screen_name"])
+        users_friends_count_dict[user['screen_name']] = user["friends_count"] 
+        users_followers_count_dict[user['screen_name']] = user["followers_count"]
+        users_ratio_dict[user['screen_name']] = (user["followers_count"]+1.0)/(user["friends_count"]+1.0)
     
     # good tweets will have more than 3 RT
     good_tweets = []
     
-    for legacy in legacies:
-        legacy_file = DIR_LU+legacy["screen_name"]
+    for user in list_users:
+        user_file = DIR_LU+user["screen_name"]
                           
-        legacy_tweets = load.load_list_from_file(legacy_file)
+        user_tweets = load.load_list_from_file(user_file)
         
-        for tweet in legacy_tweets:
+        for tweet in user_tweets:
             # more than 2 RTs and it is not a RT-ed tweet
             if tweet["retweet_count"] >= 10 and tweet["retweeted"]==False:              
                 good_tweets.append(tweet)
@@ -528,6 +530,7 @@ def get_features_of_legacies_tweets():
         retweet_count = tweet['retweet_count']
         verified = tweet['user']['verified']
         listed_count = tweet['user']['listed_count']
+        tweet_id = tweet['id']
             
         auth_followers = users_followers_count_dict[tweet['user']['screen_name']]
         auth_friends = users_friends_count_dict[tweet['user']['screen_name']]
@@ -546,9 +549,105 @@ def get_features_of_legacies_tweets():
         tweet_info["retweet_count"] = retweet_count
         tweet_info["verified"] = verified
         tweet_info["listed_count"]= listed_count
+        tweet_info["tweet_id"] = tweet_id
         
         list_tweets_feat.append(tweet_info)
     
-    save.save_list_to_file(list_tweets_feat, legacies_features_file)
+    save.save_list_to_file(list_tweets_feat, features_file)
+
+def normalize_features(features):
+    """Normalizez the values calculated for legacies features of tweets"""
+    # calculate max number of each element found in tweets (needed for normalization)
+    max_hash_tags = 0
+    max_links = 0
+    max_mentions = 0
+    max_len = 0
+    max_sentiment = 0
+    max_friends = 0
+    max_followers = 0
+    max_ratio = 0 # calculated as (no of followers + 1)/no friends
+    max_time = 0 #most recent time
+    max_rt_count = 0
+    max_listed_count = 1
+    max_rt_foll = 0
+    for feat in features:
+        # get max hash-tags
+        if feat['hash_tags'] > max_hash_tags:
+            max_hash_tags = feat['hash_tags']
+        # get max links
+        if feat['links'] > max_links:
+            max_links = feat['links']
+        # get max mentions
+        if feat['mentions'] > max_mentions:
+            max_mentions = feat['mentions']        
+        # get length of tweet
+        if feat['length_tweet'] > max_len:
+            max_len = feat['length_tweet']    
+        # get sentiment
+        if feat['sentiment_tweet'] > max_sentiment:
+            max_sentiment = feat['sentiment_tweet']    
+        # get friends of user
+        if feat['auth_friends'] > max_friends:
+            max_friends = feat['auth_friends']    
+        # get followers
+        if feat['auth_followers'] > max_followers:
+            max_followers = feat['auth_followers']    
+        feat['real_followers_count']=feat['auth_followers']
+        # get ratio
+        if feat['auth_ratio'] > max_ratio:
+            max_ratio = feat['auth_ratio']    
+        # get time
+        if feat['time_of_creation'] > max_time:
+            max_time = feat['time_of_creation']    
+        # get retweet_count
+        if feat['retweet_count'] > max_rt_count:
+            max_rt_count = feat['retweet_count']
+        if (feat['retweet_count']+0.0)/feat['auth_followers'] > max_rt_foll:
+            max_rt_foll = (feat['retweet_count']+0.0)/feat['auth_followers']
+        feat['rt_foll']=(feat['retweet_count']+0.0)/feat["auth_followers"]
+            # get retweet_count
+        if feat['listed_count'] > max_listed_count:
+            max_listed_count = feat['listed_count']
+    
+    # normalize data 
+    for feat in features:
+        # normalize hash-tags
+        feat['hash_tags'] = (feat['hash_tags']+0.0)/max_hash_tags
+        # normalize links
+        feat['links'] = (feat['links']+0.0)/max_links
+        # normalize mentions
+        feat['mentions'] = (feat['mentions']+0.0)/max_mentions
+        # normalize of tweet
+        feat['length_tweet'] = (feat['length_tweet']+0.0)/max_len
+        # normalize sentiment
+        feat['sentiment_tweet'] = (feat['sentiment_tweet']+0.0)/max_sentiment
+        # normalize friends of user
+        feat['auth_friends'] = (feat['auth_friends']+0.0)/max_friends
+        # normalize followers
+        feat['auth_followers'] = (feat['auth_followers']+0.0)/max_followers
+        # normalize ratio
+        feat['auth_ratio'] = (feat['auth_ratio']+0.0)/max_ratio
+        # normalize time
+        feat['time_of_creation'] = (feat['time_of_creation']+0.0)/max_time
+        # normalize listed count
+        feat['listed_count'] = (feat['listed_count']+0.0)/max_listed_count
+        # normalize ret/foll values
+        feat['rt_foll'] = (feat['rt_foll']+0.0)/max_rt_foll
+    
+    # normalized features
+    return features,max_hash_tags,max_links,max_mentions,max_len,max_sentiment,max_friends,max_followers,max_ratio,max_time,max_rt_count,max_listed_count,max_rt_foll
+
+def favorite_a_tweet(tweet_id,my_screen_name):
+    """ Favorites the tweet with the given id, if the given username hasn't already favorited that tweet"""
+    # get last 20 favs and make sure this one is not among them
+    favs = twitterapi.make_twitter_request(twitter_api.favorites.list, screen_name = my_screen_name)
+    found = False
+    
+    for fav in favs:
+        if fav["id"] == tweet_id:
+            found = True
+            break
         
+    if found == False:
+        twitterapi.make_twitter_request(twitter_api.favorites.create, tweet_id)
 ##################################################################
