@@ -116,9 +116,15 @@ def test_datastore_load():
 #test_actions_main()
 #test_actions_friends()
 
-lista =[1,2,3,4,5]
-lista = lista[2:]
+l1 = [1,3,5]
+l2 = [7,9]
+len1 = len(l1)
+len2 = len(l2)
+lista = l1+l2
 print lista
+lista1 = lista[:len1]
+lista2 = lista[len1:]
+print lista1, lista2
 """tweets_from_chrisbrogan = load.load_list_from_file("LegaciesTweets/chrisbrogan")
 for tweet in tweets_from_chrisbrogan:
     print "Text: ",tweet["text"]
