@@ -113,4 +113,5 @@ def aproximate_rts(list_featured_features, list_candidates_for_fav):
     return sorted_dict
     
 def favorite_tweet(tweet_id):    
-    main.favorite_a_tweet(tweet_id,screen_name)
+    status = main.favorite_a_tweet(tweet_id,screen_name)
+    return status

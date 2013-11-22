@@ -27,7 +27,7 @@ list_users = load.load_list_from_file(DIR_FR+"jennifer_s_life"+"_data_"+today_fr
 
 for i in range(1,random_fav+1):
     # get no_tweets tweets from friends
-    nr_tweets = 500 
+    nr_tweets = 5
     print "[FAV] Trying to get tweets..."
     tweets = main.get_live_tweets_from_users(list_users, nr_tweets)
 
@@ -51,8 +51,14 @@ for i in range(1,random_fav+1):
     
     # favorite the most rt-ed
     last = len(aproxim)
-    all_script_methods.favorite_tweet(aproxim[last-1][0])
-    print "[FAV] Favorited one with estimation ",aproxim[last-1][1]," rts"
+    for i in range(last):
+        status = all_script_methods.favorite_tweet(aproxim[last-1][0])
+        if status != None:
+            print "[FAV] Favorited one with estimation ",aproxim[last-1][1]," rts and id - ",aproxim[last-1][0]
+            break
+        else:
+            print "[FAV] Couldn't fav - None returned"
+        last = last - 1
 
     # random waiting time before starting next follow
     wait_time = randint(10*60,60*60) # between 10 and 60 mins

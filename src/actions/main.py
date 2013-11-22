@@ -71,13 +71,14 @@ def get_live_tweets_from_users(list_users, nr_tweets):
     
     for tweet in stream:
         if count == nr_tweets: #change back to 1000 or 2000 after testing
-            break    
-        if tweet['lang'] == 'en':
-            if 'user' in tweet.keys():
-                if tweet['user']['id_str'] in filtering_list:
-                    l.append(tweet)
-                    count  = count + 1
-                    print "[Getting for FAV] Reached: ",count
+            break
+        if 'lang' in tweet.keys():    
+            if tweet['lang'] == 'en':
+                if 'user' in tweet.keys():
+                    if tweet['user']['id_str'] in filtering_list:
+                        l.append(tweet)
+                        count  = count + 1
+                        print "[Getting for FAV] Reached: ",count
             
     return l
 
@@ -616,6 +617,7 @@ def get_features_of_given_tweets(tweets_list):
             verified = tweet['user']['verified']
             listed_count = tweet['user']['listed_count']
             tweet_id = tweet['id']
+            tweet_id_str = tweet['id_str']
                 
             auth_followers = users_followers_count_dict[tweet['user']['screen_name']]
             auth_friends = users_friends_count_dict[tweet['user']['screen_name']]
@@ -635,6 +637,8 @@ def get_features_of_given_tweets(tweets_list):
             tweet_info["verified"] = verified
             tweet_info["listed_count"]= listed_count
             tweet_info["tweet_id"] = tweet_id
+            tweet_info["tweet_id_str"] = tweet_id_str
+            #print tweet_info["tweet_id"], tweet_info["tweet_id_str"]
             
             list_tweets_feat.append(tweet_info)
             
@@ -731,8 +735,12 @@ def favorite_a_tweet(tweet_id,my_screen_name):
     for fav in favs:
         if fav["id"] == tweet_id:
             found = True
+            print "[FAV] Tweet with id - ",tweet_id," fav before"
             break
         
     if found == False:
-        twitterapi.make_twitter_request(twitter_api.favorites.create, tweet_id)
+        print "[FAV] Trying to fav the tweet with the id: ",tweet_id
+        status = twitterapi.make_twitter_request(twitter_api.favorites.create, id=tweet_id)
+        print status
+        return status
 ##################################################################
