@@ -49,6 +49,9 @@ DIR_LU = "LegaciesTweets/"
 DIR_US = "UsersTweets/"
 DIR_TR = 'Training/'
 
+def get_live_tweets_from_users(list_users, nr_tweets):
+    """ Starts listening to tweets from the given users and returns the first no_tweets it gets from any of them"""
+
 def get_boston_screen_name():
     l=[]
     count = 0

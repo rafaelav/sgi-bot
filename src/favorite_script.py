@@ -5,6 +5,7 @@ Created on Nov 21, 2013
 '''
 
 import all_script_methods
+from actions import main
 from datastore import load
 from random import randint
 from time import sleep
@@ -15,7 +16,9 @@ features_file = "legacies_features"
 random_fav = randint(1,4)
 
 for i in range(1,random_fav+1):
-    # get about 500 tweets from friends 
+    # get no_tweets tweets from friends
+    nr_tweets = 500 
+    tweets = main.get_live_tweets_from_users(list_users, nr_tweets)
 
     # calculate features for these tweets
     list_candidates_for_fav
