@@ -77,6 +77,7 @@ def get_live_tweets_from_users(list_users, nr_tweets):
                 if tweet['user']['id_str'] in filtering_list:
                     l.append(tweet)
                     count  = count + 1
+                    print "[Getting for FAV] Reached: ",count
             
     return l
 

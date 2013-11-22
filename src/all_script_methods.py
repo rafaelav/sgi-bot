@@ -103,7 +103,7 @@ def retrieve_legacies_features():
     
 def aproximate_rts(list_featured_features, list_candidates_for_fav):
     """ Features are all normalized before being sent to favorite_script """
-    estimated_scores = ()
+    estimated_scores = dict()
     for i in range(0,len(list_candidates_for_fav)):
         estimated_scores[list_candidates_for_fav[i]["tweet_id"]] = training.wknnestimate(list_featured_features,list_candidates_for_fav[i])
     

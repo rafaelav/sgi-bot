@@ -1,6 +1,7 @@
 from connection import twitterapi
 from actions import users, main, followers, friends
 from datastore import load, save
+import operator
 # authenticati
 twitter_api = twitterapi.oauth_login()
 
@@ -125,6 +126,15 @@ print lista
 lista1 = lista[:len1]
 lista2 = lista[len1:]
 print lista1, lista2
+
+my_dict = dict()
+my_dict[123]=5
+my_dict[12]=3
+my_dict[786]=7
+
+sorted_dict = sorted(my_dict.iteritems(), key=operator.itemgetter(1))
+print sorted_dict
+print sorted_dict[len(sorted_dict)-1][0]
 """tweets_from_chrisbrogan = load.load_list_from_file("LegaciesTweets/chrisbrogan")
 for tweet in tweets_from_chrisbrogan:
     print "Text: ",tweet["text"]
