@@ -29,7 +29,7 @@ if from_where == 1:
     print "After eliminating duplicates: ",len(list_no_duplicates)
     
     # one turn of following random x followers (where x can be at most 150 and at least 50)
-    follow_count = randint(50,150)
+    follow_count = randint(100,150)
     print "Trying to follow about: ",follow_count
     
     picked = main.pick_random_users_from_list(list_no_duplicates, follow_count)

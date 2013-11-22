@@ -35,12 +35,19 @@ def get_info_about_users(user_ids=None, screen_names=None):
         
         # make string with ids or screen names
         users_string = ""
+        crt = 0
         if user_ids != None:
             for user in user_ids:
-                users_string = users_string + str(user) + ","
+                if crt < limit:
+                    users_string = users_string + str(user) + ","
+                    crt = crt + 1
+            user_ids = user_ids[limit:]
         else:
             for user in screen_names:
-                users_string = users_string + str(user) + ","      
+                if crt < limit:
+                    users_string = users_string + str(user) + ","
+                    crt = crt + 1    
+            screen_names = screen_names[limit:]  
         
         #removing last ","
         users_string = users_string[:-1]       
