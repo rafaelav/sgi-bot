@@ -51,6 +51,34 @@ DIR_TR = 'Training/'
 
 def get_live_tweets_from_users(list_users, nr_tweets):
     """ Starts listening to tweets from the given users and returns the first no_tweets it gets from any of them"""
+    l=[]
+    count = 0
+    list_of_ids = ''
+    filtering_list = []
+    
+    #build the list of users
+    for user in list_users:
+        if 'id_str' in user.keys():
+            list_of_ids = list_of_ids + user['id_str']+','
+            filtering_list.append(user['id_str'])
+        else:
+            print 'No id_str field in user parameter'
+            
+    list_of_ids = list_of_ids[:-1]            
+    
+    twitter_stream = twitter.TwitterStream(auth=twitter_api.auth)
+    stream = twitter_stream.statuses.filter(follow = list_of_ids)
+    
+    for tweet in stream:
+        if count == nr_tweets: #change back to 1000 or 2000 after testing
+            break    
+        if tweet['lang'] == 'en':
+            if 'user' in tweet.keys():
+                if tweet['user']['id_str'] in filtering_list:
+                    l.append(tweet)
+                    count  = count + 1
+            
+    return l
 
 def get_boston_screen_name():
     l=[]
