@@ -1,6 +1,7 @@
 from connection import twitterapi
 from actions import users, main, followers, friends
 from datastore import load, save
+import numpy
 import operator
 # authenticati
 twitter_api = twitterapi.oauth_login()
@@ -135,6 +136,10 @@ my_dict[786]=7
 sorted_dict = sorted(my_dict.iteritems(), key=operator.itemgetter(1))
 print sorted_dict
 print sorted_dict[len(sorted_dict)-1][0]
+
+#main.favorite_a_tweet("401102213738536960","jennifer_s_life")
+tweet_id = 400752070967312384
+twitterapi.make_twitter_request(twitter_api.favorites.create, _id=long(tweet_id))
 """tweets_from_chrisbrogan = load.load_list_from_file("LegaciesTweets/chrisbrogan")
 for tweet in tweets_from_chrisbrogan:
     print "Text: ",tweet["text"]

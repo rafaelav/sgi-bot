@@ -740,7 +740,7 @@ def favorite_a_tweet(tweet_id,my_screen_name):
         
     if found == False:
         print "[FAV] Trying to fav the tweet with the id: ",tweet_id
-        status = twitterapi.make_twitter_request(twitter_api.favorites.create, id=tweet_id)
+        status = twitterapi.make_twitter_request(twitter_api.favorites.create, _id=long(tweet_id))
         print status
         return status
 ##################################################################

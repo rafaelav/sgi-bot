@@ -20,14 +20,15 @@ now = datetime.datetime.now()
 today_friends_file = "friends_"+str(now.day)+"."+str(now.month)+"."+str(now.year)
 
 # random number of fav (1-4)
-random_fav = 1#randint(1,4)
+random_fav = randint(1,4)
+print "[FAV] Random number of fav: ",random_fav
 
 # load friends list
 list_users = load.load_list_from_file(DIR_FR+"jennifer_s_life"+"_data_"+today_friends_file)
 
 for i in range(1,random_fav+1):
     # get no_tweets tweets from friends
-    nr_tweets = 5
+    nr_tweets = 100
     print "[FAV] Trying to get tweets..."
     tweets = main.get_live_tweets_from_users(list_users, nr_tweets)
 
