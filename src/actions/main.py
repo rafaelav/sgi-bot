@@ -36,6 +36,7 @@ features_file = "legacies_features"
 stats_happyiness_file ="happiness_ratings.txt"
 bots_filename = 'bots_features.txt'
 humans_filename = 'users_features.txt'
+tweets_file = 'tweets_to_tweet.txt'
 
 if now.day == 1:
     yesterday_black_list = "blacklist_"+"30"+"."+str(now.month-1)+"."+str(now.year)
@@ -48,6 +49,41 @@ DIR_BL = "Blacklist/"
 DIR_LU = "LegaciesTweets/"
 DIR_US = "UsersTweets/"
 DIR_TR = 'Training/'
+DIR_TW = 'Tweet/'
+DIR_RT = 'Retweet/'
+
+def choose_retweet(users_data):
+
+    tweet = get_live_tweets_from_users(users_data,1)
+    return tweet[0]['id'] 
+
+def retweet_one_time():
+    user_ids = load.load_list_from_file('core_friends_data')
+    twitter_api.statuses.retweet(_id=choose_retweet(user_ids))
+    
+    
+
+def choose_tweet(filename):
+    
+    f = open(filename,'r')
+    lines = f.readlines()
+    f.close()
+    
+    s = lines.pop(randint(0,len(lines)-1))
+    
+    f = open(filename,'w')
+    
+    for line in lines:
+        f.write(line)
+            
+    f.close()
+            
+    return s
+
+
+
+def tweet_one_time():
+    twitter_api.statuses.update(status = choose_tweet(DIR_TW + tweets_file))
 
 def get_live_tweets_from_users(list_users, nr_tweets):
     """ Starts listening to tweets from the given users and returns the first no_tweets it gets from any of them"""
