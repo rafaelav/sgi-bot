@@ -54,7 +54,8 @@ DIR_RT = 'Retweet/'
 
 def choose_retweet(users_data):
 
-    get_live_tweets_from_users(users_data,1) 
+    tweet = get_live_tweets_from_users(users_data,1)
+    return tweet[0]['id'] 
 
 def retweet_one_time():
     user_ids = load.load_list_from_file('core_friends_data')
