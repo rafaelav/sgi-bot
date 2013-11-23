@@ -16,7 +16,7 @@ from actions.main import DIR_TR,bots_filename,humans_filename
 
 start = datetime.datetime.now()
 my_screen_name = "jennifer_s_life"
-from_where = 2#randint(1,3) # 1 from Boston, 2 from followers of friends (legacies)
+from_where = 1#randint(1,3) # 1 from Boston, 2 from followers of friends (legacies)
 
 if from_where == 1:
     print "[FOLLOW] Following from BOSTON"

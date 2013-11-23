@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python favorite_script.py
+python unfollow_script.py & favorite_script.py
 
