@@ -50,6 +50,17 @@ DIR_LU = "LegaciesTweets/"
 DIR_US = "UsersTweets/"
 DIR_TR = 'Training/'
 DIR_TW = 'Tweet/'
+DIR_RT = 'Retweet/'
+
+def choose_retweet(users_data):
+
+    get_live_tweets_from_users(users_data,1) 
+
+def retweet_one_time():
+    user_ids = load.load_list_from_file('core_friends_data')
+    twitter_api.statuses.retweet(_id=choose_retweet(user_ids))
+    
+    
 
 def choose_tweet(filename):
     
