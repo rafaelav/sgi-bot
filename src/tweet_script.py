@@ -14,13 +14,15 @@ import datetime
 start = datetime.datetime.now()
 
 with open(main.DIR_TW + 'statistics.txt','at') as f:
-    f.write('Script started at: ' + start + '\n')
+    f.write('Script started at: ' + str(start) + '\n')
 
 #decide on how many tweets we have today
-no_tweets = randint(1,3) 
+no_tweets = randint(1,3)
+print 'Decided tweeting ' + str(no_tweets) + ' times' 
 
 #sleep for a while, no need to start tweeting as soon as we start the script
 initial_wait_time = randint(1,120) #minutes
+print 'Waiting ' + str(initial_wait_time) + ' for program to start' 
 sleep(60*initial_wait_time)
 
 #actually start tweeting
@@ -30,10 +32,13 @@ for i in range(0,no_tweets):
     
     tt = datetime.datetime.now()
     with open(main.DIR_TW + 'statistics.txt','at') as f:
-        f.write('Tweet at: ' + tt + '\n')    
+        f.write('Tweet at: ' + str(tt) + '\n')    
     
-    sleep(60*randint(120,240))
+    
+    in_between_wait_time = randint(120,240)
+    print 'Tweet succesfull, waiting for ' + str(in_between_wait_time) + ' minutes before next tweet'
+    sleep(60*in_between_wait_time)
     
 endt = datetime.datetime.now()
 with open(main.DIR_TW + 'statistics.txt','at') as f:
-        f.write('Script ended at: ' + endt + '\n')   
+        f.write('Script ended at: ' + str(endt) + '\n')   

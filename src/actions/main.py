@@ -59,7 +59,7 @@ def choose_retweet(users_data):
 
 def retweet_one_time():
     user_ids = load.load_list_from_file('core_friends_data')
-    twitter_api.statuses.retweet(_id=choose_retweet(user_ids))
+    twitter_api.statuses.retweet(id=choose_retweet(user_ids))
     
     
 
