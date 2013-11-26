@@ -59,17 +59,19 @@ def histogram3(y_uptime,y_meaning,given_title,filename):
 
 #y_fol = [20,30,21,35,27,33,31,35,24,21,19,61,27,82,23,50,36,68,39]#550+20+25+20+30+20+22
 #y_unfol = [0,5,8,3,6,4,5,4,10,12,7,34,49,31,36,41,45,30,29]#359 -> 150 foll din refollow (+ ce mai sunt extra))
-#histogram(y_fol,y_unfol,"Number of follows(red) and unfollows(blue)","Follows/unfollows made each day","fol_unfol.png")
+y_fol = [20,42,11,35,46,58,37,79,24,57,14,51,47,61,42,50,36,65,56]#831 + 77
+y_unfol = [4,13,9,17,19,14,21,41,22,32,15,34,59,31,36,41,45,30,18]#501 -> 
+histogram(y_fol,y_unfol,"Number of follows(red) and unfollows(blue)","Follows/unfollows made each day","fol_unfol.png")
 
 #y_fol = [3,1,3,1,1,1,1,1,3,0,2,0,1,1,1,1,2,2,4]#550+20+25+20+30+20+22
 #y_unfol = [1,2,3,1,2,3,3,2,1,2,1,4,0,2,2,2,3,4,2]#359 -> 150 foll din refollow (+ ce mai sunt extra))
 #histogram(y_fol,y_unfol,"Number of retweets(red) and tweets(blue)","Retweets/tweets made each day","rt_t.png")
 
-y_fol = [2,1,1,1,2,0,0,0,0,0,3,2,0,1,1,0,0,1,1]#550+20+25+20+30+20+22
+#y_fol = [2,1,1,1,2,0,0,0,0,0,3,2,0,1,1,0,0,1,1]#550+20+25+20+30+20+22
 #y_unfol = [0,0,0,1,1,2,0,0,0,0,0,1,0,0,0,2,1,5,1]#359 -> 150 foll din refollow (+ ce mai sunt extra))
 #y_ment = [0,0,0,1,4,0,0,1,0,0,0,1,0,0,0,1,1,1,3]
 #histogram2(y_fol,y_unfol,y_ment,"Number of retweets(red), favorites (blue) and mentions (black) received","Retweets/tweets/mentions from other users by day","inter.png")
 
 # TODO - add uptime values in minutes for days 7-25 Nov
-y_uptime = [138,124,214,260,246,301,289,421,392,462,473,512,442,617,430,532,505,560,494]
-histogram3(y_uptime,"Up-time values (minutes)","Overview of bot up-time","up_time.png")
+#y_uptime = [138,124,214,260,246,301,289,421,392,462,473,512,442,617,430,532,505,560,494]
+#histogram3(y_uptime,"Up-time values (minutes)","Overview of bot up-time","up_time.png")
