@@ -43,7 +43,7 @@ def histogram2(y_fol,y_unfol,y_ment, y_meaning,given_title,filename):
     
 def histogram3(y_uptime,y_meaning,given_title,filename):
     x_list = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-    print len(x_list)," ",len(y_fol)," ",len(y_unfol)
+    #print len(x_list)," ",len(y_fol)," ",len(y_unfol)
     
     pos = np.arange(6,int(max(x_list)+1),1)
     ax = plt.axes()
@@ -66,9 +66,9 @@ def histogram3(y_uptime,y_meaning,given_title,filename):
 #histogram(y_fol,y_unfol,"Number of retweets(red) and tweets(blue)","Retweets/tweets made each day","rt_t.png")
 
 y_fol = [2,1,1,1,2,0,0,0,0,0,3,2,0,1,1,0,0,1,1]#550+20+25+20+30+20+22
-y_unfol = [0,0,0,1,1,2,0,0,0,0,0,1,0,0,0,2,1,5,1]#359 -> 150 foll din refollow (+ ce mai sunt extra))
-y_ment = [0,0,0,1,4,0,0,1,0,0,0,1,0,0,0,1,1,1,3]
-histogram2(y_fol,y_unfol,y_ment,"Number of retweets(red), favorites (blue) and mentions (black) received","Retweets/tweets/mentions from other users by day","inter.png")
+#y_unfol = [0,0,0,1,1,2,0,0,0,0,0,1,0,0,0,2,1,5,1]#359 -> 150 foll din refollow (+ ce mai sunt extra))
+#y_ment = [0,0,0,1,4,0,0,1,0,0,0,1,0,0,0,1,1,1,3]
+#histogram2(y_fol,y_unfol,y_ment,"Number of retweets(red), favorites (blue) and mentions (black) received","Retweets/tweets/mentions from other users by day","inter.png")
 
 # TODO - add uptime values in minutes for days 7-25 Nov
 y_uptime = [138,124,214,260,246,301,289,421,392,462,473,512,442,617,430,532,505,560,494]
