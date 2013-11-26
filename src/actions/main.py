@@ -54,12 +54,12 @@ DIR_RT = 'Retweet/'
 
 def choose_retweet(users_data):
 
-    tweet = get_live_tweets_from_users(users_data,1)
+    tweet = get_live_tweets_from_users(users_data,1,filter_opt=1)
     return tweet[0]['id'] 
 
 def retweet_one_time():
     user_ids = load.load_list_from_file('core_friends_data')
-    twitter_api.statuses.retweet(_id=choose_retweet(user_ids))
+    twitter_api.statuses.retweet(id=choose_retweet(user_ids))
     
     
 
@@ -85,7 +85,7 @@ def choose_tweet(filename):
 def tweet_one_time():
     twitter_api.statuses.update(status = choose_tweet(DIR_TW + tweets_file))
 
-def get_live_tweets_from_users(list_users, nr_tweets):
+def get_live_tweets_from_users(list_users, nr_tweets,filter_opt=0):
     """ Starts listening to tweets from the given users and returns the first no_tweets it gets from any of them"""
     l=[]
     count = 0
@@ -112,9 +112,16 @@ def get_live_tweets_from_users(list_users, nr_tweets):
             if tweet['lang'] == 'en':
                 if 'user' in tweet.keys():
                     if tweet['user']['id_str'] in filtering_list:
-                        l.append(tweet)
-                        count  = count + 1
-                        print "[Getting for FAV] Reached: ",count
+                        if filter_opt == 0:    
+                            l.append(tweet)
+                            count  = count + 1
+                            print "[Getting for FAV] Reached: ",count
+                        else:
+                            if '@' not in tweet['text']:
+                                l.append(tweet)
+                                count  = count + 1
+                                print "[Getting for FAV] Reached: ",count
+                                    
             
     return l
 
