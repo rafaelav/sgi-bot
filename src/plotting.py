@@ -71,5 +71,5 @@ y_ment = [0,0,0,1,4,0,0,1,0,0,0,1,0,0,0,1,1,1,3]
 histogram2(y_fol,y_unfol,y_ment,"Number of retweets(red), favorites (blue) and mentions (black) received","Retweets/tweets/mentions from other users by day","inter.png")
 
 # TODO - add uptime values in minutes for days 7-25 Nov
-y_uptime = []
+y_uptime = [138,124,214,260,246,301,289,421,392,462,473,512,442,617,430,532,505,560,494]
 histogram3(y_uptime,"Up-time values (minutes)","Overview of bot up-time","up_time.png")
