@@ -85,6 +85,82 @@ def choose_tweet(filename):
 def tweet_one_time():
     twitter_api.statuses.update(status = choose_tweet(DIR_TW + tweets_file))
 
+def rt_hashtag_tweets(hashtag,limit,list_of_ignore=[]):
+    count = 0
+    
+    twitter_stream = twitter.TwitterStream(auth=twitter_api.auth)
+    stream = twitter_stream.statuses.filter(track=hashtag)
+    
+    doNotTweet = False
+    
+    for tweet in stream:
+        if count == limit: #change back to 1000 or 2000 after testing
+            break
+        
+        
+        
+        doNotTweet = False
+        
+        
+        print 'Tweet found\n'
+        print tweet
+        
+        if 'lang' in tweet.keys():
+            if tweet['lang'] != 'en':
+                print '1'
+                doNotTweet = True
+        
+        if 'user' in tweet.keys():
+            if tweet['user']['screen_name'] == 'jennifer_s_life':
+                print '2'
+                doNotTweet = True        
+                
+        #if 'retweeted' in tweet.keys():
+            #if tweet['retweeted'] == True:
+                #doNotTweet = True
+           #retweeted_status']['retweeted     
+        if 'retweeted_status' in tweet.keys():
+            if 'retweeted' in tweet['retweeted_status'].keys():
+                if tweet['retweeted_status']['retweeted'] == True:
+                    print '3'
+                    doNotTweet = True
+                    
+        if 'retweeted_status' in tweet.keys():
+            if 'user' in tweet['retweeted_status'].keys():
+                if 'screen_name' in tweet['retweeted_status']['user'].keys():
+                    if tweet['retweeted_status']['user']['screen_name'] == 'jennifer_s_life':
+                        print '4'
+                        doNotTweet = True
+                        
+        if 'id' not in tweet.keys():
+            doNotTweet = True
+            print '5'
+                                     
+       
+        if doNotTweet ==  False:
+            x = 60*randint(10,30)
+            print 'Retweeting in ' + str(x) + '\n'
+            sleep(randint(5,20))                        
+            twitter_api.statuses.retweet(id=tweet['id'])
+            print 'Retweeted'
+            count = count + 1
+            sleep(x)                 
+
+def fv_hashtag_tweets(hashtag,list_of_ignore=[]):
+        
+    twitter_stream = twitter.TwitterStream(auth=twitter_api.auth)
+    stream = twitter_stream.statuses.filter(track=hashtag)
+    
+     
+    for tweet in stream:
+            x = randint(5,15)
+            print 'Favoring in ' + str(x) + '\n'
+            sleep(x)
+            try:                        
+                favorite_a_tweet(tweet['id'],'jennifer_s_life',skip_checks=True)
+            except:
+                print 'Already Favorited'    
+
 def get_live_tweets_from_users(list_users, nr_tweets,filter_opt=0):
     """ Starts listening to tweets from the given users and returns the first no_tweets it gets from any of them"""
     l=[]
@@ -769,21 +845,28 @@ def normalize_features(features):
     # normalized features
     return features
 
-def favorite_a_tweet(tweet_id,my_screen_name):
+def favorite_a_tweet(tweet_id,my_screen_name,skip_checks=False):
     """ Favorites the tweet with the given id, if the given username hasn't already favorited that tweet"""
-    # get last 20 favs and make sure this one is not among them
-    favs = twitterapi.make_twitter_request(twitter_api.favorites.list, screen_name = my_screen_name)
+    
     found = False
     
-    for fav in favs:
-        if fav["id"] == tweet_id:
-            found = True
-            print "[FAV] Tweet with id - ",tweet_id," fav before"
-            break
+    if skip_checks == False:
+        # get last 20 favs and make sure this one is not among them
+        favs = twitterapi.make_twitter_request(twitter_api.favorites.list, screen_name = my_screen_name)
+        
+        
+        for fav in favs:
+            if fav["id"] == tweet_id:
+                found = True
+                print "[FAV] Tweet with id - ",tweet_id," fav before"
+                break
         
     if found == False:
         print "[FAV] Trying to fav the tweet with the id: ",tweet_id
-        status = twitterapi.make_twitter_request(twitter_api.favorites.create, _id=long(tweet_id))
+        try:
+            status = twitterapi.make_twitter_request(twitter_api.favorites.create, _id=long(tweet_id))
+        except:
+            print'Already favorited'    
         print status
         return status
 ##################################################################
